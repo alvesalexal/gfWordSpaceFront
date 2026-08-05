@@ -56,6 +56,20 @@ export const nevada = {
   950: '#090a0b',
 } satisfies PaletteRange;
 
+export const darkBlue = {
+  50: '#f2f4fa',
+  100: '#dce0ec',
+  200: '#b5bbd0',
+  300: '#8e96b5',
+  400: '#6b749a',
+  500: '#4a5380',
+  600: '#363d66',
+  700: '#252a4a',
+  800: '#1a1a3e',
+  900: '#0d1b2a',
+  950: '#0a0f1a',
+} satisfies PaletteRange;
+
 export const redOrange = {
   50: '#fef3f2',
   100: '#fee4e2',

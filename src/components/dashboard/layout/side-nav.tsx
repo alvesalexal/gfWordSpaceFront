@@ -22,15 +22,15 @@ import LogoLeao from '@/components/LogoLeao';
 
 const sidebarColors = {
   dark: {
-    '--SideNav-bg': '#090a0b',
+    '--SideNav-bg': '#0a0f1a',
     '--SideNav-color': '#ffffff',
-    '--SideNav-border': '#32383e',
-    '--NavItem-color': '#cdd7e1',
+    '--SideNav-border': '#252a4a',
+    '--NavItem-color': '#8e96b5',
     '--NavItem-hover-bg': 'rgba(255, 255, 255, 0.04)',
-    '--NavItem-disabled-color': '#636b74',
-    '--NavItem-icon-color': '#9fa6ad',
-    '--NavItem-icon-disabled-color': '#555e68',
-    '--Selector-bg': '#090a0b',
+    '--NavItem-disabled-color': '#4a5380',
+    '--NavItem-icon-color': '#6b749a',
+    '--NavItem-icon-disabled-color': '#363d66',
+    '--Selector-bg': '#0a0f1a',
   },
   light: {
     '--SideNav-bg': '#ffffff',

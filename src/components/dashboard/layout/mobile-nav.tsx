@@ -22,14 +22,14 @@ import { navIcons } from './nav-icons';
 
 const sidebarColors = {
   dark: {
-    '--MobileNav-bg': '#090a0b',
+    '--MobileNav-bg': '#0a0f1a',
     '--MobileNav-color': '#ffffff',
-    '--MobileNav-border': '#32383e',
-    '--NavItem-color': '#cdd7e1',
+    '--MobileNav-border': '#252a4a',
+    '--NavItem-color': '#8e96b5',
     '--NavItem-hover-bg': 'rgba(255, 255, 255, 0.04)',
-    '--NavItem-disabled-color': '#636b74',
-    '--NavItem-icon-color': '#9fa6ad',
-    '--Selector-bg': '#090a0b',
+    '--NavItem-disabled-color': '#4a5380',
+    '--NavItem-icon-color': '#6b749a',
+    '--Selector-bg': '#0a0f1a',
   },
   light: {
     '--MobileNav-bg': '#ffffff',
