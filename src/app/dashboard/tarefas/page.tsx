@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
+import { LoadingButton } from '@/components/core/loading-button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -56,6 +57,7 @@ export default function TarefasPage(): React.JSX.Element {
   const [editingId, setEditingId] = React.useState<number | null>(null);
   const [selectedTarefa, setSelectedTarefa] = React.useState<ContentData | null>(null);
   const [isPending, setIsPending] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
 
   const isTeacher = user?.role === 'teacher';
 
@@ -123,12 +125,15 @@ export default function TarefasPage(): React.JSX.Element {
 
   const handleDelete = async () => {
     if (!deleteId) return;
+    setIsDeleting(true);
     try {
       await api.delete(endpoints.content.byId(deleteId));
       setTarefas((prev) => prev.filter((t) => t.id !== deleteId));
       setDeleteId(null);
     } catch (err) {
       showError('Erro ao excluir tarefa');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -303,10 +308,12 @@ export default function TarefasPage(): React.JSX.Element {
           <Typography>Tem certeza que deseja excluir esta tarefa?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteId(null)}>Cancelar</Button>
-          <Button color="error" onClick={handleDelete}>
-            Excluir
+          <Button onClick={() => setDeleteId(null)} disabled={isDeleting}>
+            Cancelar
           </Button>
+          <LoadingButton color="error" onClick={handleDelete} loading={isDeleting}>
+            Excluir
+          </LoadingButton>
         </DialogActions>
       </Dialog>
 

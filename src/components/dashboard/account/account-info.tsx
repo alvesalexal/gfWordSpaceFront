@@ -43,10 +43,14 @@ export function AccountInfo(): React.JSX.Element {
 
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('avatar', file);
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
 
-      await api.uploadFile(endpoints.person.avatar(Number(user.id)), formData);
+      await api.put(endpoints.person.avatar(Number(user.id)), { avatar: base64 });
       if (checkSession) {
         await checkSession();
       }

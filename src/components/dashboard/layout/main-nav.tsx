@@ -16,6 +16,7 @@ import { Users as UsersIcon } from '@phosphor-icons/react/dist/ssr/Users';
 
 import { usePopover } from '@/hooks/use-popover';
 import { useThemeToggle } from '@/hooks/use-theme-toggle';
+import { useUser } from '@/hooks/use-user';
 
 import { MobileNav } from './mobile-nav';
 import { UserPopover } from './user-popover';
@@ -25,6 +26,7 @@ export function MainNav(): React.JSX.Element {
 
   const userPopover = usePopover<HTMLDivElement>();
   const { mode, toggleColorScheme } = useThemeToggle();
+  const { user } = useUser();
 
   return (
     <React.Fragment>
@@ -79,7 +81,7 @@ export function MainNav(): React.JSX.Element {
             <Avatar
               onClick={userPopover.handleOpen}
               ref={userPopover.anchorRef}
-              src="/assets/avatar.png"
+              src={user?.avatar || '/assets/avatar.png'}
               sx={{ cursor: 'pointer' }}
             />
           </Stack>

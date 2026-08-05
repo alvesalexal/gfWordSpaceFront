@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import * as React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@mui/material/Button';
+import { LoadingButton } from '@/components/core/loading-button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -58,6 +59,8 @@ export default function LeiturasPage(): React.JSX.Element {
   const [showForm, setShowForm] = React.useState(false);
   const [editingId, setEditingId] = React.useState<number | null>(null);
   const [isPending, setIsPending] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [isCommenting, setIsCommenting] = React.useState(false);
   const [selectedLeitura, setSelectedLeitura] = React.useState<ContentData | null>(null);
   const [commentText, setCommentText] = React.useState('');
 
@@ -127,17 +130,21 @@ export default function LeiturasPage(): React.JSX.Element {
 
   const handleDelete = async () => {
     if (!deleteId) return;
+    setIsDeleting(true);
     try {
       await api.delete(endpoints.content.byId(deleteId));
       setLeituras((prev) => prev.filter((l) => l.id !== deleteId));
       setDeleteId(null);
     } catch (err) {
       showError('Erro ao excluir leitura');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   const handleAddComment = async () => {
     if (!selectedLeitura || !commentText.trim()) return;
+    setIsCommenting(true);
     try {
       const newComment = await api.post<CommentData>(endpoints.content.comment(selectedLeitura.id), {
         message: commentText.trim(),
@@ -146,6 +153,8 @@ export default function LeiturasPage(): React.JSX.Element {
       setCommentText('');
     } catch (err) {
       showError('Erro ao adicionar comentário');
+    } finally {
+      setIsCommenting(false);
     }
   };
 
@@ -297,10 +306,12 @@ export default function LeiturasPage(): React.JSX.Element {
           <Typography>Tem certeza que deseja excluir esta leitura?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteId(null)}>Cancelar</Button>
-          <Button color="error" onClick={handleDelete}>
-            Excluir
+          <Button onClick={() => setDeleteId(null)} disabled={isDeleting}>
+            Cancelar
           </Button>
+          <LoadingButton color="error" onClick={handleDelete} loading={isDeleting}>
+            Excluir
+          </LoadingButton>
         </DialogActions>
       </Dialog>
 
@@ -329,9 +340,9 @@ export default function LeiturasPage(): React.JSX.Element {
                       }
                     }}
                   />
-                  <Button variant="contained" onClick={handleAddComment} disabled={!commentText.trim()}>
+                  <LoadingButton variant="contained" onClick={handleAddComment} disabled={!commentText.trim()} loading={isCommenting}>
                     Enviar
-                  </Button>
+                  </LoadingButton>
                 </Stack>
               )}
               <List>

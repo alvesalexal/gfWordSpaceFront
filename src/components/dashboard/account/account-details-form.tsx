@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import Button from '@mui/material/Button';
+import { LoadingButton } from '@/components/core/loading-button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -81,9 +81,9 @@ export function AccountDetailsForm(): React.JSX.Element {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Button type="submit" variant="contained" disabled={isPending}>
-            {isPending ? 'Salvando...' : 'Salvar'}
-          </Button>
+          <LoadingButton type="submit" variant="contained" loading={isPending}>
+            Salvar
+          </LoadingButton>
         </CardActions>
       </Card>
     </form>

@@ -5,7 +5,7 @@ import RouterLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
+import { LoadingButton } from '@/components/core/loading-button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -163,9 +163,9 @@ export function SignUpForm(): React.JSX.Element {
             )}
           />
           {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
-          <Button disabled={isPending} type="submit" variant="contained">
+          <LoadingButton loading={isPending} type="submit" variant="contained">
             Cadastrar
-          </Button>
+          </LoadingButton>
         </Stack>
       </form>
     </Stack>

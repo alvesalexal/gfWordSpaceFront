@@ -1,67 +1,165 @@
-import * as React from 'react';
-import RouterLink from 'next/link';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+'use client';
 
-import { paths } from '@/paths';
-import { DynamicLogo } from '@/components/core/logo';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { keyframes } from '@emotion/react';
 
 export interface LayoutProps {
   children: React.ReactNode;
 }
 
+
+const float1 = keyframes`
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -40px) scale(1.05); }
+  50% { transform: translate(-20px, 20px) scale(0.95); }
+  75% { transform: translate(15px, 35px) scale(1.02); }
+`;
+
+const float2 = keyframes`
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-40px, 25px) scale(0.97); }
+  50% { transform: translate(25px, -35px) scale(1.04); }
+  75% { transform: translate(-15px, -20px) scale(0.98); }
+`;
+
+const float3 = keyframes`
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(35px, 30px) scale(1.03); }
+  66% { transform: translate(-30px, -25px) scale(0.96); }
+`;
+
+const fadeInUp = keyframes`
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
 export function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <Box
       sx={{
-        display: { xs: 'flex', lg: 'grid' },
+        minHeight: '100vh',
+        minWidth: '100vw',
+        display: 'flex',
         flexDirection: 'column',
-        gridTemplateColumns: '1fr 1fr',
-        minHeight: '100%',
+        position: 'relative',
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, #0a0f1a 0%, #0d1b2a 25%, #1a1a3e 50%, #0f2027 75%, #0a0f1a 100%)',
       }}
     >
-      <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
-        <Box sx={{ p: 3 }}>
-          <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-block', fontSize: 0 }}>
-            <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} />
-          </Box>
-        </Box>
-        <Box sx={{ alignItems: 'center', display: 'flex', flex: '1 1 auto', justifyContent: 'center', p: 3 }}>
-          <Box sx={{ maxWidth: '450px', width: '100%' }}>{children}</Box>
-        </Box>
-      </Box>
+      {/* Animated floating orbs */}
       <Box
         sx={{
+          position: 'absolute',
+          top: '10%',
+          left: '15%',
+          width: { xs: 200, md: 350 },
+          height: { xs: 200, md: 350 },
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(21, 183, 159, 0.15) 0%, rgba(21, 183, 159, 0) 70%)',
+          filter: 'blur(40px)',
+          animation: `${float1} 20s ease-in-out infinite`,
+          pointerEvents: 'none',
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          right: '10%',
+          width: { xs: 250, md: 400 },
+          height: { xs: 250, md: 400 },
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(99, 91, 255, 0.12) 0%, rgba(99, 91, 255, 0) 70%)',
+          filter: 'blur(50px)',
+          animation: `${float2} 25s ease-in-out infinite`,
+          pointerEvents: 'none',
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: '5%',
+          left: '30%',
+          width: { xs: 180, md: 300 },
+          height: { xs: 180, md: 300 },
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(99, 91, 255, 0.1) 0%, rgba(21, 183, 159, 0.05) 50%, transparent 70%)',
+          filter: 'blur(45px)',
+          animation: `${float3} 18s ease-in-out infinite`,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* LeaoGF SVG background */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: 340, sm: 440, md: 560 },
+          height: { xs: 340, sm: 440, md: 560 },
+          opacity: 0.07,
+          pointerEvents: 'none',
+          zIndex: 1,
+          backgroundImage: 'url(/assets/LeaoGFBlack.svg)',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          backgroundSize: 'contain',
+          filter: 'brightness(0) invert(1)',
+        }}
+      />
+
+      {/* Main content - centered card */}
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
           alignItems: 'center',
-          background: 'radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)',
-          color: 'var(--mui-palette-common-white)',
-          display: { xs: 'none', lg: 'flex' },
           justifyContent: 'center',
-          p: 3,
+          px: 3,
+          pb: 6,
+          position: 'relative',
+          zIndex: 10,
         }}
       >
-        <Stack spacing={3}>
-          <Stack spacing={1}>
-            <Typography color="inherit" sx={{ fontSize: '24px', lineHeight: '32px', textAlign: 'center' }} variant="h1">
-              Welcome to{' '}
-              <Box component="span" sx={{ color: '#15b79e' }}>
-                WordSpace
-              </Box>
-            </Typography>
-            <Typography align="center" variant="subtitle1">
-              Estudos Biblicos e Espaco de Aprendizado.
-            </Typography>
-          </Stack>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Box
-              component="img"
-              alt="Widgets"
-              src="/assets/auth-widgets.png"
-              sx={{ height: 'auto', width: '100%', maxWidth: '600px' }}
-            />
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: 440,
+            animation: `${fadeInUp} 0.6s ease-out`,
+          }}
+        >
+          {/* Glassmorphic card */}
+          <Box
+            sx={{
+              background: 'rgba(10, 15, 26, 0.18)',
+              backdropFilter: 'blur(4px)',
+              WebkitBackdropFilter: 'blur(4px)',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: '24px',
+              p: { xs: 4, sm: 5 },
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+            }}
+          >
+            {children}
           </Box>
-        </Stack>
+
+          {/* Footer text */}
+          <Typography
+            align="center"
+            sx={{
+              mt: 4,
+              color: 'rgba(255, 255, 255, 0.3)',
+              fontSize: '0.8rem',
+              letterSpacing: '0.5px',
+            }}
+          >
+            WordSpace &mdash; Estudos Biblicos e Espaco de Aprendizado
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

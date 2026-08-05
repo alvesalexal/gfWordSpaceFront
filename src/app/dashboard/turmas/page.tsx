@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { LoadingButton } from '@/components/core/loading-button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Checkbox from '@mui/material/Checkbox';
@@ -46,6 +47,8 @@ export default function TurmasPage(): React.JSX.Element {
   const [editingId, setEditingId] = React.useState<number | null>(null);
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
   const [isPending, setIsPending] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [enrollingId, setEnrollingId] = React.useState<number | null>(null);
 
   const isTeacher = user?.role === 'teacher';
   const isStudent = user?.role === 'student';
@@ -119,22 +122,28 @@ export default function TurmasPage(): React.JSX.Element {
 
   const handleDelete = async () => {
     if (!deleteId) return;
+    setIsDeleting(true);
     try {
       await api.delete(endpoints.dashboard.classes + `/${deleteId}`);
       setTurmas((prev) => prev.filter((t) => t.id !== deleteId));
       setDeleteId(null);
     } catch (err) {
       showError('Erro ao excluir turma');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   const handleEnroll = async (classId: number) => {
+    setEnrollingId(classId);
     try {
       await api.post(endpoints.dashboard.enroll, { fk_class_id: classId });
       showSuccess('Matriculado com sucesso!');
       await loadClasses();
     } catch (err) {
       showError('Erro ao matricular');
+    } finally {
+      setEnrollingId(null);
     }
   };
 
@@ -286,9 +295,14 @@ export default function TurmasPage(): React.JSX.Element {
                       )}
                     </Stack>
                     {isStudent && (
-                      <Button variant="outlined" size="small" onClick={() => handleEnroll(turma.id)}>
+                      <LoadingButton
+                        variant="outlined"
+                        size="small"
+                        onClick={() => handleEnroll(turma.id)}
+                        loading={enrollingId === turma.id}
+                      >
                         Entrar na turma
-                      </Button>
+                      </LoadingButton>
                     )}
                   </Stack>
                 </CardContent>
@@ -308,10 +322,12 @@ export default function TurmasPage(): React.JSX.Element {
           <Typography>Tem certeza que deseja excluir esta turma?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteId(null)}>Cancelar</Button>
-          <Button color="error" onClick={handleDelete}>
-            Excluir
+          <Button onClick={() => setDeleteId(null)} disabled={isDeleting}>
+            Cancelar
           </Button>
+          <LoadingButton color="error" onClick={handleDelete} loading={isDeleting}>
+            Excluir
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </Stack>

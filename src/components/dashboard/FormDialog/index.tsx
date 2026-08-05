@@ -7,6 +7,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import { LoadingButton } from '@/components/core/loading-button';
+
 export interface FormDialogProps {
   open: boolean;
   onClose: () => void;
@@ -44,9 +46,9 @@ export function FormDialog({
         <Button variant="outlined" onClick={onClose} disabled={isPending}>
           {cancelLabel}
         </Button>
-        <Button type="submit" form="form-dialog" variant="contained" disabled={isPending}>
-          {isPending ? 'Salvando...' : submitLabel}
-        </Button>
+        <LoadingButton type="submit" form="form-dialog" variant="contained" loading={isPending}>
+          {submitLabel}
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

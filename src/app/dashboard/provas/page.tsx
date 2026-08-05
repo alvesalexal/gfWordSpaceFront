@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { LoadingButton } from '@/components/core/loading-button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -195,6 +196,7 @@ export default function ProvasPage(): React.JSX.Element {
   const [loading, setLoading] = React.useState(true);
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
   const [isPending, setIsPending] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const [selectedContent, setSelectedContent] = React.useState<ContentData | null>(null);
 
   const [showForm, setShowForm] = React.useState(false);
@@ -337,12 +339,15 @@ export default function ProvasPage(): React.JSX.Element {
 
   const handleDelete = async () => {
     if (!deleteId) return;
+    setIsDeleting(true);
     try {
       await api.delete(endpoints.content.byId(deleteId));
       setContents((prev) => prev.filter((c) => c.id !== deleteId));
       setDeleteId(null);
     } catch {
       showError('Erro ao excluir prova');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -514,10 +519,12 @@ export default function ProvasPage(): React.JSX.Element {
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={closeForm}>Cancelar</Button>
-            <Button variant="contained" type="submit" form="prova-form" disabled={isPending}>
-              {isPending ? 'Salvando...' : editingContent ? 'Salvar Alterações' : 'Criar Prova'}
+            <Button onClick={closeForm} disabled={isPending}>
+              Cancelar
             </Button>
+            <LoadingButton variant="contained" type="submit" form="prova-form" loading={isPending}>
+              {editingContent ? 'Salvar Alterações' : 'Criar Prova'}
+            </LoadingButton>
           </DialogActions>
         </form>
       </Dialog>
@@ -666,10 +673,12 @@ export default function ProvasPage(): React.JSX.Element {
           <Typography>Tem certeza que deseja excluir esta prova?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteId(null)}>Cancelar</Button>
-          <Button color="error" onClick={handleDelete}>
-            Excluir
+          <Button onClick={() => setDeleteId(null)} disabled={isDeleting}>
+            Cancelar
           </Button>
+          <LoadingButton color="error" onClick={handleDelete} loading={isDeleting}>
+            Excluir
+          </LoadingButton>
         </DialogActions>
       </Dialog>
 
