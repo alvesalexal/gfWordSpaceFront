@@ -42,7 +42,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
 import dynamic from 'next/dynamic';
-import { api, type ClassData, type ContentData, type PerformData, type QuestionData } from '@/lib/api';
+import { api, endpoints, type ClassData, type ContentData, type PerformData, type QuestionData } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/hooks/use-user';
 import { HtmlContent } from '@/components/dashboard/html-content';
@@ -241,17 +241,17 @@ export default function ProvasPage(): React.JSX.Element {
     async function load() {
       try {
         const [provasData, classesData] = await Promise.all([
-          api.get<ContentData[]>('/content/type/prova'),
+          api.get<ContentData[]>(endpoints.content.byType('prova')),
           isTeacher
-            ? api.get<ClassData[]>('/dashboard/teacher-classes')
-            : api.get<ClassData[]>('/dashboard/student-classes'),
+            ? api.get<ClassData[]>(endpoints.dashboard.teacherClasses)
+            : api.get<ClassData[]>(endpoints.dashboard.studentClasses),
         ]);
         setContents(provasData);
         setClasses(classesData);
 
         if (isStudent) {
           try {
-            const performsData = await api.get<PerformData[]>('/content/my-performs');
+            const performsData = await api.get<PerformData[]>(endpoints.content.myPerforms);
             setPerforms(performsData);
           } catch {
             // ignore
@@ -282,12 +282,12 @@ export default function ProvasPage(): React.JSX.Element {
       };
 
       if (editingContent) {
-        await api.put(`/content/full-test/${editingContent.id}`, payload);
+        await api.put(endpoints.content.fullTestById(editingContent.id), payload);
       } else {
-        await api.post('/content/full-test', payload);
+        await api.post(endpoints.content.fullTest, payload);
       }
 
-      const provasData = await api.get<ContentData[]>('/content/type/prova');
+      const provasData = await api.get<ContentData[]>(endpoints.content.byType('prova'));
       setContents(provasData);
       closeForm();
       showSuccess(editingContent ? 'Prova editada com sucesso!' : 'Prova criada com sucesso!');
@@ -338,7 +338,7 @@ export default function ProvasPage(): React.JSX.Element {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      await api.delete(`/content/${deleteId}`);
+      await api.delete(endpoints.content.byId(deleteId));
       setContents((prev) => prev.filter((c) => c.id !== deleteId));
       setDeleteId(null);
     } catch {

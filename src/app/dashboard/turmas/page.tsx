@@ -23,7 +23,7 @@ import { Pencil as PencilIcon, Plus as PlusIcon, Trash as TrashIcon } from '@pho
 import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
-import { api, type ClassData, type StudentData } from '@/lib/api';
+import { api, endpoints, type ClassData, type StudentData } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/hooks/use-user';
 import { FormDialog } from '@/components/dashboard/FormDialog';
@@ -64,7 +64,7 @@ export default function TurmasPage(): React.JSX.Element {
 
   const loadClasses = React.useCallback(async () => {
     try {
-      const data = await api.get<ClassData[]>('/dashboard/classes');
+      const data = await api.get<ClassData[]>(endpoints.dashboard.classes);
       setTurmas(data);
     } catch (err) {
       showError('Erro ao carregar turmas');
@@ -75,8 +75,8 @@ export default function TurmasPage(): React.JSX.Element {
     async function load() {
       try {
         const [turmasData, studentsData] = await Promise.all([
-          api.get<ClassData[]>('/dashboard/classes'),
-          isTeacher ? api.get<StudentData[]>('/dashboard/students') : Promise.resolve([]),
+          api.get<ClassData[]>(endpoints.dashboard.classes),
+          isTeacher ? api.get<StudentData[]>(endpoints.dashboard.students) : Promise.resolve([]),
         ]);
         setTurmas(turmasData);
         setStudents(studentsData);
@@ -93,9 +93,9 @@ export default function TurmasPage(): React.JSX.Element {
     setIsPending(true);
     try {
       if (editingId) {
-        await api.put<ClassData>(`/dashboard/classes/${editingId}`, values);
+        await api.put<ClassData>(endpoints.dashboard.classes + `/${editingId}`, values);
       } else {
-        await api.post<ClassData>('/dashboard/classes', values);
+        await api.post<ClassData>(endpoints.dashboard.classes, values);
       }
       await loadClasses();
       reset();
@@ -120,7 +120,7 @@ export default function TurmasPage(): React.JSX.Element {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      await api.delete(`/dashboard/classes/${deleteId}`);
+      await api.delete(endpoints.dashboard.classes + `/${deleteId}`);
       setTurmas((prev) => prev.filter((t) => t.id !== deleteId));
       setDeleteId(null);
     } catch (err) {
@@ -130,7 +130,7 @@ export default function TurmasPage(): React.JSX.Element {
 
   const handleEnroll = async (classId: number) => {
     try {
-      await api.post('/dashboard/enroll', { fk_class_id: classId });
+      await api.post(endpoints.dashboard.enroll, { fk_class_id: classId });
       showSuccess('Matriculado com sucesso!');
       await loadClasses();
     } catch (err) {

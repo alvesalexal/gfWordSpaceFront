@@ -1,90 +1,102 @@
-## [Devias Kit - React](https://material-kit-react.devias.io/)
+## WordSpace - Estudos Bíblicos
 
 ![license](https://img.shields.io/badge/license-MIT-blue.svg)
 
-[![Devias Kit - React](https://github.com/devias-io/material-kit-react/blob/main/public/assets/thumbnail.png)](https://material-kit-react.devias.io/)
+Plataforma educacional para estudos bíblicos, construída com [Next.js](https://nextjs.org/), [React](https://reactjs.org/) e [MUI](https://mui.com/).
 
-> Free React Admin Dashboard made with [MUI's](https://mui.com) components, [React](https://reactjs.org) and of course [Next.js](https://github.com/vercel/next.js) to boost your app development process!
+## Sobre
 
-## Pages 
+O WordSpace é uma plataforma de ensino que permite a gestão de turmas, tarefas, leituras e provas para professores e alunos. O projeto é baseado no [Devias Kit - React](https://material-kit-react.devias.io/) e utiliza a arquitetura de App Router do Next.js 14.
 
-- [Dashboard](https://material-kit-react.devias.io)
-- [Customers](https://material-kit-react.devias.io/dashboard/customers)
-- [Integrations](https://material-kit-react.devias.io/dashboard/integrations)
-- [Settings](https://material-kit-react.devias.io/dashboard/settings)
-- [Account](https://material-kit-react.devias.io/dashboard/account)
-- [Sign In](https://material-kit-react.devias.io/auth/sign-in)
-- [Sign Up](https://material-kit-react.devias.io/auth/sign-up)
-- [Reset Password](https://material-kit-react.devias.io/auth/reset-password)
+## Funcionalidades
 
-## Free Figma Community File
+- **Autenticação**: Cadastro, login e recuperação de senha
+- **Turmas** (professor): Criar, editar e gerenciar turmas, e matricular alunos
+- **Turmas** (aluno): Visualizar e entrar em turmas
+- **Tarefas**: Criar e responder tarefas com editor de texto rico (Jodit)
+- **Leituras**: Criar leituras e comentários
+- **Provas**: Criar provas com questões de múltipla escolha e texto livre, com timer e correção automática
+- **Conta**: Gerenciar perfil do usuário
 
-- [Duplicate File](https://www.figma.com/file/b3L1Np4RYiicZAOMopHNkm/Devias-Dashboard-Design-Library-Kit)
+## Páginas
 
-## Upgrade to PRO Version
+### Autenticação
+- `/auth/sign-in` - Login
+- `/auth/sign-up` - Cadastro
+- `/auth/reset-password` - Solicitar redefinição de senha
+- `/auth/confirm-reset-password` - Confirmar redefinição de senha
 
-We also have a pro version of this product which bundles even more pages and components if you want
-to save more time and design efforts :)
-
-| Free Version (this one)  | [Devias Kit Pro](https://mui.com/store/items/devias-kit-pro/)                |
-| ------------------------ | :--------------------------------------------------------------------------- |
-| **8** Pages              | **80+** Pages                                                                |
-| ✔ Custom Authentication  | ✔ Authentication with **Amplify**, **Auth0**, **Firebase** and **Supabase**  |
-| -                        | ✔ Vite Version                                                               |
-| -                        | ✔ Dark Mode Support                                                          |
-| -                        | ✔ Complete Users Flows                                                       |
-| -                        | ✔ Premium Technical Support                                                  |
+### Dashboard
+- `/dashboard` - Visão geral (estatísticas e conteúdos recentes)
+- `/dashboard/turmas` - Gerenciamento de turmas
+- `/dashboard/tarefas` - Gerenciamento de tarefas
+- `/dashboard/leituras` - Gerenciamento de leituras
+- `/dashboard/provas` - Gerenciamento de provas
+- `/dashboard/provas/realizar/[testId]` - Realizar prova (aluno)
+- `/dashboard/conta` - Perfil da conta
+- `/dashboard/settings` - Configurações e notificações
 
 ## Quick start
 
-- Clone the repo: `git clone https://github.com/devias-io/material-kit-react.git`
-- Make sure your Node.js and npm versions are up to date
-- Install dependencies: `npm install` or `yarn`
-- Start the server: `npm run dev` or `yarn dev`
-- Open browser: `http://localhost:3000`
+- Clone o repositório
+- Certifique-se de que o Node.js e npm estão instalados e atualizados
+- Instale as dependências: `npm install` ou `yarn`
+- Inicie o servidor: `npm run dev` ou `yarn dev`
+- Acesse: `http://localhost:3000`
 
-## File Structure
+## Comandos Disponíveis
 
-Within the download you'll find the following directories and files:
+| Comando | Descrição |
+|---------|-----------|
+| `npm run dev` | Inicia o servidor de desenvolvimento |
+| `npm run build` | Gera a build de produção |
+| `npm run start` | Inicia o servidor de produção |
+| `npm run lint` | Executa o lint |
+| `npm run lint:fix` | Corrige problemas de lint |
+| `npm run typecheck` | Verificação de tipos TypeScript |
+| `npm run format:write` | Formata o código com Prettier |
+| `npm run format:check` | Verifica a formatação |
+
+## Stack Tecnológica
+
+- **Framework**: Next.js 14 (App Router)
+- **UI Library**: React 18
+- **Componentes**: MUI (Material UI) 5
+- **Estilos**: Emotion
+- **Formulários**: React Hook Form + Zod
+- **Editor de texto rico**: Jodit
+- **Ícones**: Phosphor Icons, Iconify
+- **Gráficos**: ApexCharts
+- **Linguagem**: TypeScript
+
+## Estrutura do Projeto
 
 ```
-┌── .editorconfig
-├── .eslintrc.js
-├── .gitignore
-├── CHANGELOG.md
-├── LICENSE.md
-├── next-env.d.ts
-├── next.config.js
-├── package.json
-├── README.md
-├── tsconfig.json
-├── public
-└── src
-	├── components
-	├── contexts
-	├── hooks
-	├── lib
-	├── styles
-	├── types
-	└── app
-		├── layout.tsx
-		├── page.tsx
-		├── auth
-		└── dashboard
+src/
+├── app/                  # Rotas e páginas (App Router)
+│   ├── auth/             # Páginas de autenticação
+│   ├── dashboard/        # Páginas do painel principal
+│   │   ├── turmas/       # Gestão de turmas
+│   │   ├── tarefas/      # Gestão de tarefas
+│   │   ├── leituras/     # Gestão de leituras
+│   │   ├── provas/       # Gestão de provas
+│   │   │   └── realizar/[testId]/  # Realizar prova
+│   │   ├── conta/        # Perfil do usuário
+│   │   └── settings/     # Configurações
+│   └── errors/           # Páginas de erro
+├── components/           # Componentes React
+│   ├── auth/             # Componentes de autenticação
+│   ├── core/             # Componentes centrais (tema, logo, etc.)
+│   ├── dashboard/        # Componentes do dashboard
+│   └── Editor/           # Editor de texto rico
+├── contexts/             # React Contexts
+├── hooks/                # Custom hooks
+├── lib/                  # Utilitários e cliente API
+├── styles/               # Estilos globais
+├── types/                # Definições de tipos TypeScript
+└── utils/                # Funções utilitárias
 ```
 
-## Resources
+## Licença
 
-- More freebies like this one: https://devias.io
-
-## Reporting Issues:
-
-- [Github Issues Page](https://github.com/devias-io/material-kit-react/issues)
-
-## License
-
-- Licensed under [MIT](https://github.com/devias-io/material-kit-react/blob/main/LICENSE.md)
-
-## Contact Us
-
-- Email Us: support@deviasio.zendesk.com
+- Licenciado sob [MIT](LICENSE.md)

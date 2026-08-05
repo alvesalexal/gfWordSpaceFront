@@ -19,7 +19,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { ArrowLeft, CheckCircle, Timer as TimerIcon } from '@phosphor-icons/react';
 
-import { api, type ContentData, type PerformData, type QuestionData, type TestData } from '@/lib/api';
+import { api, endpoints, type ContentData, type PerformData, type QuestionData, type TestData } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { HtmlContent } from '@/components/dashboard/html-content';
 const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
@@ -94,8 +94,8 @@ export default function RealizarProvaPage(): React.JSX.Element {
     async function load() {
       try {
         const [provasData, performsData] = await Promise.all([
-          api.get<ContentData[]>('/content/type/prova'),
-          api.get<PerformData[]>('/content/my-performs').catch(() => []),
+          api.get<ContentData[]>(endpoints.content.byType('prova')),
+          api.get<PerformData[]>(endpoints.content.myPerforms).catch(() => []),
         ]);
 
         const alreadyDone = performsData.some((p) => p.test?.id === testId);
@@ -146,7 +146,7 @@ export default function RealizarProvaPage(): React.JSX.Element {
     setSubmitting(true);
     try {
       const latestAnswers = { ...answers, ...answersRef.current };
-      const result = await api.post<PerformData>(`/content/test/${test.id}/submit`, {
+      const result = await api.post<PerformData>(endpoints.content.submitTest(test.id), {
         answers: latestAnswers,
       });
       setResult(result);

@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import { BookOpen, ClipboardText, FileText, GraduationCap, Users } from '@phosphor-icons/react';
 
-import { api, type ContentData, type DashboardStudent, type DashboardTeacher } from '@/lib/api';
+import { api, endpoints, type ContentData, type DashboardStudent, type DashboardTeacher } from '@/lib/api';
 import { useUser } from '@/hooks/use-user';
 
 interface StatCardProps {
@@ -96,10 +96,10 @@ export default function DashboardPage(): React.JSX.Element {
     async function loadData() {
       try {
         if (isTeacher) {
-          const data = await api.get<DashboardTeacher>('/dashboard/teacher');
+          const data = await api.get<DashboardTeacher>(endpoints.dashboard.teacher);
           setTeacherData(data);
         } else {
-          const data = await api.get<DashboardStudent>('/dashboard/student');
+          const data = await api.get<DashboardStudent>(endpoints.dashboard.student);
           setStudentData(data);
         }
       } catch (err) {

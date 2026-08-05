@@ -30,7 +30,7 @@ import { ChatCircle, PencilSimple as PencilIcon, Plus as PlusIcon, Trash as Tras
 import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
-import { api, type ClassData, type CommentData, type ContentData } from '@/lib/api';
+import { api, endpoints, type ClassData, type CommentData, type ContentData } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/hooks/use-user';
 import { FormDialog } from '@/components/dashboard/FormDialog';
@@ -79,10 +79,10 @@ export default function LeiturasPage(): React.JSX.Element {
     async function load() {
       try {
         const [leiturasData, classesData] = await Promise.all([
-          api.get<ContentData[]>('/content/type/leitura'),
+          api.get<ContentData[]>(endpoints.content.byType('leitura')),
           isTeacher
-            ? api.get<ClassData[]>('/dashboard/teacher-classes')
-            : api.get<ClassData[]>('/dashboard/student-classes'),
+            ? api.get<ClassData[]>(endpoints.dashboard.teacherClasses)
+            : api.get<ClassData[]>(endpoints.dashboard.studentClasses),
         ]);
         setLeituras(leiturasData);
         setClasses(classesData);
@@ -99,10 +99,10 @@ export default function LeiturasPage(): React.JSX.Element {
     setIsPending(true);
     try {
       if (editingId) {
-        const updated = await api.put<ContentData>(`/content/${editingId}`, values);
+        const updated = await api.put<ContentData>(endpoints.content.byId(editingId), values);
         setLeituras((prev) => prev.map((l) => (l.id === editingId ? updated : l)));
       } else {
-        const newLeitura = await api.post<ContentData>('/content', { ...values, type: 'leitura' });
+        const newLeitura = await api.post<ContentData>(endpoints.content.base, { ...values, type: 'leitura' });
         setLeituras((prev) => [newLeitura, ...prev]);
       }
       reset();
@@ -128,7 +128,7 @@ export default function LeiturasPage(): React.JSX.Element {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      await api.delete(`/content/${deleteId}`);
+      await api.delete(endpoints.content.byId(deleteId));
       setLeituras((prev) => prev.filter((l) => l.id !== deleteId));
       setDeleteId(null);
     } catch (err) {
@@ -139,7 +139,7 @@ export default function LeiturasPage(): React.JSX.Element {
   const handleAddComment = async () => {
     if (!selectedLeitura || !commentText.trim()) return;
     try {
-      const newComment = await api.post<CommentData>(`/content/${selectedLeitura.id}/comment`, {
+      const newComment = await api.post<CommentData>(endpoints.content.comment(selectedLeitura.id), {
         message: commentText.trim(),
       });
       setSelectedLeitura((prev) => (prev ? { ...prev, Comment: [newComment, ...(prev.Comment || [])] } : prev));

@@ -1,7 +1,7 @@
 'use client';
 
 import type { User } from '@/types/user';
-import { api, type AuthResponse } from '@/lib/api';
+import { api, endpoints, type AuthResponse } from '@/lib/api';
 
 export interface SignUpParams {
   name: string;
@@ -19,7 +19,7 @@ export interface SignInWithPasswordParams {
 class AuthClient {
   async signUp(params: SignUpParams): Promise<{ error?: string; data?: AuthResponse }> {
     try {
-      const result = await api.post<AuthResponse>('/auth/register', params);
+      const result = await api.post<AuthResponse>(endpoints.auth.register, params);
       localStorage.setItem('custom-auth-token', result.token);
       return { data: result };
     } catch (error: any) {
@@ -29,7 +29,7 @@ class AuthClient {
 
   async signInWithPassword(params: SignInWithPasswordParams): Promise<{ error?: string; data?: AuthResponse }> {
     try {
-      const result = await api.post<AuthResponse>('/auth/login', params);
+      const result = await api.post<AuthResponse>(endpoints.auth.login, params);
       localStorage.setItem('custom-auth-token', result.token);
       return { data: result };
     } catch (error: any) {
@@ -52,7 +52,7 @@ class AuthClient {
         role: string;
         url_avatar?: string;
         phone?: string;
-      }>('/auth/me');
+      }>(endpoints.auth.me);
 
       return {
         data: {
@@ -72,7 +72,7 @@ class AuthClient {
 
   async resetPassword(_params: { email: string }): Promise<{ error?: string; data?: { resetToken: string } }> {
     try {
-      const result = await api.post<{ resetToken: string }>('/auth/forgot-password', _params);
+      const result = await api.post<{ resetToken: string }>(endpoints.auth.forgotPassword, _params);
       return { data: result };
     } catch (error: any) {
       return { error: error.message || 'Erro ao solicitar recuperação de senha' };
@@ -81,7 +81,7 @@ class AuthClient {
 
   async confirmPassword(params: { token: string; password: string }): Promise<{ error?: string; data?: { message: string } }> {
     try {
-      const result = await api.post<{ message: string }>('/auth/reset-password', params);
+      const result = await api.post<{ message: string }>(endpoints.auth.resetPassword, params);
       return { data: result };
     } catch (error: any) {
       return { error: error.message || 'Erro ao redefinir senha' };

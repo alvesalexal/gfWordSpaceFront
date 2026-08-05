@@ -27,7 +27,7 @@ import { PencilSimple as PencilIcon, Plus as PlusIcon, Trash as TrashIcon } from
 import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
-import { api, type ClassData, type ContentData } from '@/lib/api';
+import { api, endpoints, type ClassData, type ContentData } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/hooks/use-user';
 import { FormDialog } from '@/components/dashboard/FormDialog';
@@ -73,10 +73,10 @@ export default function TarefasPage(): React.JSX.Element {
   async function load() {
     try {
       const [tarefasData, classesData] = await Promise.all([
-        api.get<ContentData[]>('/content/type/tarefa'),
+        api.get<ContentData[]>(endpoints.content.byType('tarefa')),
         isTeacher
-          ? api.get<ClassData[]>('/dashboard/teacher-classes')
-          : api.get<ClassData[]>('/dashboard/student-classes'),
+          ? api.get<ClassData[]>(endpoints.dashboard.teacherClasses)
+          : api.get<ClassData[]>(endpoints.dashboard.studentClasses),
       ]);
       setTarefas(tarefasData);
       setClasses(classesData);
@@ -95,10 +95,10 @@ export default function TarefasPage(): React.JSX.Element {
     setIsPending(true);
     try {
       if (editingId) {
-        const updated = await api.put<ContentData>(`/content/${editingId}`, values);
+        const updated = await api.put<ContentData>(endpoints.content.byId(editingId), values);
         setTarefas((prev) => prev.map((t) => (t.id === editingId ? updated : t)));
       } else {
-        const newTarefa = await api.post<ContentData>('/content', { ...values, type: 'tarefa' });
+        const newTarefa = await api.post<ContentData>(endpoints.content.base, { ...values, type: 'tarefa' });
         setTarefas((prev) => [newTarefa, ...prev]);
       }
       reset();
@@ -124,7 +124,7 @@ export default function TarefasPage(): React.JSX.Element {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      await api.delete(`/content/${deleteId}`);
+      await api.delete(endpoints.content.byId(deleteId));
       setTarefas((prev) => prev.filter((t) => t.id !== deleteId));
       setDeleteId(null);
     } catch (err) {

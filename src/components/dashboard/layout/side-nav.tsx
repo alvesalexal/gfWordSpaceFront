@@ -18,6 +18,7 @@ import { Logo } from '@/components/core/logo';
 
 import { navItems } from './config';
 import { navIcons } from './nav-icons';
+import LogoLeao from '@/components/LogoLeao';
 
 const sidebarColors = {
   dark: {
@@ -77,8 +78,12 @@ export function SideNav(): React.JSX.Element {
       }}
     >
       <Stack spacing={2} sx={{ p: 3 }}>
-        <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-flex' }}>
-          <Logo color={isDark ? 'light' : 'dark'} height={32} width={122} />
+        <Box component={RouterLink} href={paths.home} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {/*<Logo color={isDark ? 'light' : 'dark'} height={32} width={122} />*/}
+          <LogoLeao width={32} height={32} />
+          {/*<Typography color="inherit" variant="h6" sx={{ ml: 1 }}>
+            WordSpace
+          </Typography>*/}
         </Box>
         <Box
           sx={{

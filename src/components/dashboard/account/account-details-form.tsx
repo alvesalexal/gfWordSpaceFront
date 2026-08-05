@@ -12,7 +12,7 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { api } from '@/lib/api';
+import { api, endpoints } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/hooks/use-user';
 
@@ -28,7 +28,7 @@ export function AccountDetailsForm(): React.JSX.Element {
     event.preventDefault();
     setIsPending(true);
     try {
-      await api.put(`/person/${user?.id}`, { name, email, phone });
+      await api.put(endpoints.person.byId(Number(user?.id)), { name, email, phone });
       if (checkSession) {
         await checkSession();
       }

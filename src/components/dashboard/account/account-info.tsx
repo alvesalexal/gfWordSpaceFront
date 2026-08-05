@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { PencilSimple as PencilIcon } from '@phosphor-icons/react/dist/ssr/PencilSimple';
 
-import { api } from '@/lib/api';
+import { api, endpoints } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/hooks/use-user';
 
@@ -46,7 +46,7 @@ export function AccountInfo(): React.JSX.Element {
       const formData = new FormData();
       formData.append('avatar', file);
 
-      await api.uploadFile(`/person/${user.id}/avatar`, formData);
+      await api.uploadFile(endpoints.person.avatar(Number(user.id)), formData);
       if (checkSession) {
         await checkSession();
       }
