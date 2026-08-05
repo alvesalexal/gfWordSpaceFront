@@ -31,3 +31,40 @@ html {
 body {
   height: 100%;
 }
+
+/* Jodit Dark Theme matching MUI dark palette (darkBlue) */
+.jodit_theme_dark {
+  --jd-dark-background-color: #0d1b2a;
+  --jd-dark-background-ligher: #4a5380;
+  --jd-dark-background-darknes: #0a0f1a;
+  --jd-dark-border-color: #252a4a;
+  --jd-dark-text-color: #dce0ec;
+  --jd-dark-text-color-opacity80: rgba(220, 224, 236, 0.8);
+  --jd-dark-text-color-opacity50: rgba(220, 224, 236, 0.5);
+  --jd-dark-icon-color: #dce0ec;
+  --jd-dark-toolbar-color: #8e96b5;
+  --jd-dark-toolbar-seperator-color1: rgba(37, 42, 74, 0.41);
+  --jd-dark-toolbar-seperator-color2: #363d66;
+  --jd-dark-toolbar-seperator-color-opacity80: rgba(54, 61, 102, 0.8);
+  --jd-dark-toolbar-seperator-color3: rgba(54, 61, 102, 0.75);
+  --jd-dark-color-border-selected: #363d66;
+  --jd-color-background-default: #0d1b2a;
+  --jd-color-border: #252a4a;
+  --jd-color-panel: #1a1a3e;
+  --jd-color-icon: #dce0ec;
+  --jd-color-text: #dce0ec;
+  --jd-color-text-icons: #dce0ec;
+  --jd-color-placeholder: #8e96b5;
+  --jd-color-background-selection: #363d66;
+  --jd-color-background-selection-opacity50: rgba(54, 61, 102, 0.5);
+  --jd-color-button-background-hover: #363d66;
+  --jd-color-button-background-hover-opacity40: rgba(54, 61, 102, 0.4);
+  --jd-color-button-background-hover-opacity60: rgba(54, 61, 102, 0.6);
+  --jd-color-background-active: #363d66;
+  --jd-color-background-gray: #1a1a3e;
+  --jd-color-background-gray-hover: #252a4a;
+  --jd-color-background-light-gray: #0a0f1a;
+  --jd-color-source-area: #0a0f1a;
+  --jd-color-separator: #252a4a;
+  --jd-color-label: #8e96b5;
+}
