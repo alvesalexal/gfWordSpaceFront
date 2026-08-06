@@ -117,7 +117,7 @@ export default function TurmasPage(): React.JSX.Element {
     setEditingId(turma.id);
     setValue('name', turma.name);
     setValue('bio', turma.Bio || '');
-    const enrolledIds = turma.Study?.map((s) => s.studtent.id) || [];
+    const enrolledIds = turma.Study?.map((s) => s.Student.id) || [];
     setValue('studentIds', enrolledIds);
     setShowForm(true);
   };
@@ -214,15 +214,15 @@ export default function TurmasPage(): React.JSX.Element {
                 onChange={(_, newValue) => {
                   field.onChange(newValue.map((s) => s.id));
                 }}
-                getOptionLabel={(option) => option.person.name}
+                getOptionLabel={(option) => option.Person.name}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 renderOption={(props, option, { selected }) => (
                   <li {...props} key={option.id}>
                     <Checkbox checked={selected} />
                     <Stack direction="column">
-                      <Typography variant="body2">{option.person.name}</Typography>
+                      <Typography variant="body2">{option.Person.name}</Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {option.person.email}
+                        {option.Person.email}
                       </Typography>
                     </Stack>
                   </li>
@@ -231,7 +231,7 @@ export default function TurmasPage(): React.JSX.Element {
                   value.map((option, index) => (
                     <Chip
                       variant="outlined"
-                      label={option.person.name}
+                      label={option.Person.name}
                       size="small"
                       {...getTagProps({ index })}
                       key={option.id}

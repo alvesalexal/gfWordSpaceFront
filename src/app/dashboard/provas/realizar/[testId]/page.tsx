@@ -98,7 +98,7 @@ export default function RealizarProvaPage(): React.JSX.Element {
           api.get<PerformData[]>(endpoints.content.myPerforms).catch(() => []),
         ]);
 
-        const alreadyDone = performsData.some((p) => p.test?.id === testId);
+        const alreadyDone = performsData.some((p) => p.Test?.id === testId);
         if (alreadyDone) {
           showError('Esta prova já foi realizada e não pode ser refita');
           router.push('/dashboard/provas');

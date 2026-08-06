@@ -206,13 +206,13 @@ export default function TarefasPage(): React.JSX.Element {
   const performMap = React.useMemo(() => {
     const map = new Map<number, PerformData>();
     for (const p of performs) {
-      if (p.test?.id) map.set(p.test.id, p);
+      if (p.Test?.id) map.set(p.Test.id, p);
     }
     return map;
   }, [performs]);
 
   const completedTestIds = React.useMemo(() => {
-    return new Set(performs.map((p) => p.test?.id).filter(Boolean));
+    return new Set(performs.map((p) => p.Test?.id).filter(Boolean));
   }, [performs]);
 
   const {
@@ -550,7 +550,7 @@ export default function TarefasPage(): React.JSX.Element {
                         {tarefa.subTitle}
                       </Typography>
                     )}
-                    <Chip label={tarefa.class.name} size="small" color="primary" variant="outlined" sx={{ fontSize: '0.7rem', height: 24, width: 'fit-content' }} />
+                    <Chip label={tarefa.Class.name} size="small" color="primary" variant="outlined" sx={{ fontSize: '0.7rem', height: 24, width: 'fit-content' }} />
 
                     {tarefa.Test && tarefa.Test.length > 0 && (
                       <Stack spacing={1} sx={{ mt: 1 }}>
@@ -662,7 +662,7 @@ export default function TarefasPage(): React.JSX.Element {
                   </Typography>
                 )}
                 <Chip
-                  label={selectedTarefa.class.name}
+                  label={selectedTarefa.Class.name}
                   size="small"
                   variant="outlined"
                   sx={{ alignSelf: 'flex-start' }}

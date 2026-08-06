@@ -362,7 +362,7 @@ export default function LeiturasPage(): React.JSX.Element {
                         {leitura.subTitle}
                       </Typography>
                     )}
-                    <Chip label={leitura.class.name} size="small" color="primary" variant="outlined" sx={{ fontSize: '0.7rem', height: 24, width: 'fit-content' }} />
+                    <Chip label={leitura.Class.name} size="small" color="primary" variant="outlined" sx={{ fontSize: '0.7rem', height: 24, width: 'fit-content' }} />
                     <Typography variant="caption" color="text.secondary">
                       {leitura.Comment?.length || 0} comentário(s)
                     </Typography>
@@ -421,11 +421,11 @@ export default function LeiturasPage(): React.JSX.Element {
                 {(selectedLeitura.Comment || []).map((comment) => {
                   const isStudentComment = !!comment.fk_student_id;
                   const isTeacherComment = !!comment.fk_teacher_id;
-                  const isOwner = isStudent && isStudentComment && user && comment.student?.person.id === Number(user.id);
-                  const isTeacherOwner = isTeacher && isTeacherComment && user && comment.teacher?.person.id === Number(user.id);
+                  const isOwner = isStudent && isStudentComment && user && comment.Student?.Person.id === Number(user.id);
+                  const isTeacherOwner = isTeacher && isTeacherComment && user && comment.Teacher?.Person.id === Number(user.id);
                   const canDelete = isStudent ? isOwner : isTeacher && (isStudentComment || isTeacherOwner);
                   const canEdit = isStudent ? isOwner : isTeacherOwner;
-                  const authorName = comment.student?.person?.name || comment.teacher?.person?.name || 'Autor desconhecido';
+                  const authorName = comment.Student?.Person?.name || comment.Teacher?.Person?.name || 'Autor desconhecido';
                   return (
                     <ListItem
                       key={comment.id}

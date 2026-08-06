@@ -81,10 +81,10 @@ export default function RealizarTarefaPage(): React.JSX.Element {
           return;
         }
 
-        const testDone = performsData.some((p) => p.test?.id === foundTest!.id);
+          const testDone = performsData.some((p) => p.Test?.id === foundTest!.id);
         if (testDone) {
           setAlreadyDone(true);
-          const existingPerform = performsData.find((p) => p.test?.id === foundTest!.id);
+          const existingPerform = performsData.find((p) => p.Test?.id === foundTest!.id);
           if (existingPerform) {
             setResult(existingPerform);
           }

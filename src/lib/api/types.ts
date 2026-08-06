@@ -30,11 +30,11 @@ export interface ContentData {
   created_at: string;
   fk_class_id: number;
   fk_teacher_id: number;
-  teacher: {
+  Teacher: {
     id: number;
-    person: { name: string; email: string };
+    Person: { name: string; email: string };
   };
-  class: { id: number; name: string };
+  Class: { id: number; name: string };
   Test: TestData[];
   Comment: CommentData[];
 }
@@ -67,13 +67,13 @@ export interface CommentData {
   fk_student_id?: number;
   fk_teacher_id?: number;
   fk_content_id: number;
-  student?: {
+  Student?: {
     id: number;
-    person: { id: number; name: string; email: string };
+    Person: { id: number; name: string; email: string };
   };
-  teacher?: {
+  Teacher?: {
     id: number;
-    person: { id: number; name: string; email: string };
+    Person: { id: number; name: string; email: string };
   };
 }
 
@@ -82,7 +82,7 @@ export interface PerformData {
   answer?: string;
   score?: number;
   created_at: string;
-  test: TestData;
+  Test: TestData;
 }
 
 export interface DashboardTeacher {
@@ -108,7 +108,7 @@ export interface ClassData {
   name: string;
   Bio?: string;
   _count?: { Study: number; Content: number };
-  Study?: { studtent: StudentData }[];
+  Study?: { Student: StudentData }[];
 }
 
 export interface StudentData {
@@ -116,5 +116,5 @@ export interface StudentData {
   active: boolean;
   bio?: string;
   fk_person_id: number;
-  person: { id: number; name: string; email: string; phone?: string };
+  Person: { id: number; name: string; email: string; phone?: string };
 }

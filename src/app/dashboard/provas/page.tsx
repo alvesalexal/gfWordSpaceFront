@@ -210,7 +210,7 @@ export default function ProvasPage(): React.JSX.Element {
   const completedTestIds = React.useMemo(() => {
     const ids = new Set<number>();
     for (const p of performs) {
-      if (p.test?.id) ids.add(p.test.id);
+      if (p.Test?.id) ids.add(p.Test.id);
     }
     return ids;
   }, [performs]);
@@ -218,7 +218,7 @@ export default function ProvasPage(): React.JSX.Element {
   const performMap = React.useMemo(() => {
     const map = new Map<number, PerformData>();
     for (const p of performs) {
-      if (p.test?.id) map.set(p.test.id, p);
+      if (p.Test?.id) map.set(p.Test.id, p);
     }
     return map;
   }, [performs]);
@@ -588,7 +588,7 @@ export default function ProvasPage(): React.JSX.Element {
                         {content.subTitle}
                       </Typography>
                     )}
-                    <Chip label={content.class.name} size="small" color="primary" variant="outlined" sx={{ fontSize: '0.7rem', height: 24, width: 'fit-content' }} />
+                    <Chip label={content.Class.name} size="small" color="primary" variant="outlined" sx={{ fontSize: '0.7rem', height: 24, width: 'fit-content' }} />
                     {content.Test && content.Test.length > 0 && (
                       <Stack spacing={1} sx={{ mt: 1 }}>
                         {content.Test.map((test) => {
@@ -692,7 +692,7 @@ export default function ProvasPage(): React.JSX.Element {
                   </Typography>
                 )}
                 <Chip
-                  label={selectedContent.class.name}
+                  label={selectedContent.Class.name}
                   size="small"
                   variant="outlined"
                   sx={{ alignSelf: 'flex-start' }}

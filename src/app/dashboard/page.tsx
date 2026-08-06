@@ -79,7 +79,7 @@ function RecentContents({ contents }: { contents: ContentData[] }): React.JSX.El
               <Typography variant="subtitle1">{content.title}</Typography>
               <Typography color="text.secondary" variant="body2">
                 {content.type === 'tarefa' ? 'Tarefa' : content.type === 'leitura' ? 'Leitura' : 'Prova'} -{' '}
-                {content.class.name}
+                {content.Class.name}
               </Typography>
             </Box>
           ))}
