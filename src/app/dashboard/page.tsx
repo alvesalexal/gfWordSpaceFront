@@ -131,7 +131,7 @@ export default function DashboardPage(): React.JSX.Element {
             <StatCard title="Provas" value={teacherData.provas} icon={<FileText size={28} />} color="warning.main" />
           </Grid>
           <Grid xs={12} sm={6} lg={3}>
-            <StatCard title="Alunos" value={teacherData.totalAlunos} icon={<Users size={28} />} color="secondary.main" />
+            <StatCard title="Alunos" value={teacherData.totalAlunos} icon={<Users size={28} />} color="success.main" />
           </Grid>
         </Grid>
         <RecentContents contents={teacherData.recentContents} />
