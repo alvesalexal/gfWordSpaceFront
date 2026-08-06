@@ -7,8 +7,8 @@ interface LogoLeaoProps extends React.SVGProps<SVGSVGElement> {
 
 const LogoLeao = ({ size, width, height, ...props }: LogoLeaoProps) => {
   const theme = useTheme();
-  const fillColor = theme.palette.mode === 'dark' ? '#fefefe' : '#242021';
-  const strokeColor = theme.palette.mode === 'dark' ? '#242021' : '#fefefe';
+  const fillColor = theme.palette.mode === 'dark' ? theme.palette.common.white : theme.palette.neutral[900];
+  const strokeColor = theme.palette.mode === 'dark' ? theme.palette.neutral[900] : theme.palette.common.white;
 
   const computedWidth = size ?? width ?? 1066;
   const computedHeight = size ?? height ?? 1125;

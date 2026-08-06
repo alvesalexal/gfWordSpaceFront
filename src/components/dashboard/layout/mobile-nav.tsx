@@ -22,24 +22,24 @@ import { navIcons } from './nav-icons';
 
 const sidebarColors = {
   dark: {
-    '--MobileNav-bg': '#0a0f1a',
-    '--MobileNav-color': '#ffffff',
-    '--MobileNav-border': '#252a4a',
-    '--NavItem-color': '#8e96b5',
+    '--MobileNav-bg': 'var(--mui-palette-neutral-950)',
+    '--MobileNav-color': 'var(--mui-palette-common-white)',
+    '--MobileNav-border': 'var(--mui-palette-neutral-800)',
+    '--NavItem-color': 'var(--mui-palette-neutral-400)',
     '--NavItem-hover-bg': 'rgba(255, 255, 255, 0.04)',
-    '--NavItem-disabled-color': '#4a5380',
-    '--NavItem-icon-color': '#6b749a',
-    '--Selector-bg': '#0a0f1a',
+    '--NavItem-disabled-color': 'var(--mui-palette-neutral-600)',
+    '--NavItem-icon-color': 'var(--mui-palette-neutral-500)',
+    '--Selector-bg': 'var(--mui-palette-neutral-950)',
   },
   light: {
-    '--MobileNav-bg': '#ffffff',
-    '--MobileNav-color': '#212636',
-    '--MobileNav-border': '#dcdfe4',
-    '--NavItem-color': '#565e73',
+    '--MobileNav-bg': 'var(--mui-palette-common-white)',
+    '--MobileNav-color': 'var(--mui-palette-neutral-900)',
+    '--MobileNav-border': 'var(--mui-palette-neutral-200)',
+    '--NavItem-color': 'var(--mui-palette-neutral-500)',
     '--NavItem-hover-bg': 'rgba(0, 0, 0, 0.04)',
-    '--NavItem-disabled-color': '#8a94a6',
-    '--NavItem-icon-color': '#667085',
-    '--Selector-bg': '#f9fafb',
+    '--NavItem-disabled-color': 'var(--mui-palette-neutral-400)',
+    '--NavItem-icon-color': 'var(--mui-palette-neutral-500)',
+    '--Selector-bg': 'var(--mui-palette-neutral-50)',
   },
 } as const;
 

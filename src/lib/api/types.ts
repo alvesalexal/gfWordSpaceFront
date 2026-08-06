@@ -64,9 +64,14 @@ export interface CommentData {
   message: string;
   created_at: string;
   updated_at?: string;
-  fk_student_id: number;
+  fk_student_id?: number;
+  fk_teacher_id?: number;
   fk_content_id: number;
-  student: {
+  student?: {
+    id: number;
+    person: { id: number; name: string; email: string };
+  };
+  teacher?: {
     id: number;
     person: { id: number; name: string; email: string };
   };

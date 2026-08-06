@@ -1,6 +1,6 @@
 import type { ColorSystemOptions } from '@mui/material/styles';
 
-import { california, darkBlue, kepple, neonBlue, nevada, redOrange, shakespeare, stormGrey } from './colors';
+import { california, kepple, neonBlue, nevada, redOrange, shakespeare, stormGrey } from './colors';
 import type { ColorScheme } from './types';
 
 export const colorSchemes = {
@@ -9,16 +9,16 @@ export const colorSchemes = {
       action: { disabledBackground: 'rgba(0, 0, 0, 0.12)' },
       background: {
         default: 'var(--mui-palette-neutral-950)',
-        defaultChannel: '10 15 26',
+        defaultChannel: '9 10 11',
         paper: 'var(--mui-palette-neutral-900)',
-        paperChannel: '13 27 42',
+        paperChannel: '19 78 72',
         level1: 'var(--mui-palette-neutral-800)',
         level2: 'var(--mui-palette-neutral-700)',
         level3: 'var(--mui-palette-neutral-600)',
       },
       common: { black: '#000000', white: '#ffffff' },
       divider: 'var(--mui-palette-neutral-700)',
-      dividerChannel: '37 42 74',
+      dividerChannel: '50 56 62',
       error: {
         ...redOrange,
         light: redOrange[300],
@@ -33,7 +33,7 @@ export const colorSchemes = {
         dark: shakespeare[500],
         contrastText: 'var(--mui-palette-common-black)',
       },
-      neutral: { ...darkBlue },
+      neutral: { ...nevada },
       primary: {
         ...neonBlue,
         light: neonBlue[300],
@@ -57,9 +57,9 @@ export const colorSchemes = {
       },
       text: {
         primary: 'var(--mui-palette-neutral-100)',
-        primaryChannel: '220 224 236',
+        primaryChannel: '240 244 248',
         secondary: 'var(--mui-palette-neutral-400)',
-        secondaryChannel: '107 116 154',
+        secondaryChannel: '159 166 173',
         disabled: 'var(--mui-palette-neutral-600)',
       },
       warning: {
@@ -75,13 +75,13 @@ export const colorSchemes = {
     palette: {
       action: { disabledBackground: 'rgba(0, 0, 0, 0.06)' },
       background: {
-        default: 'var(--mui-palette-neutral-50)',
-        defaultChannel: '249 250 251',
+        default: 'var(--mui-palette-common-white)',
+        defaultChannel: '255 255 255',
         paper: 'var(--mui-palette-common-white)',
         paperChannel: '255 255 255',
-        level1: 'var(--mui-palette-neutral-100)',
-        level2: 'var(--mui-palette-neutral-200)',
-        level3: 'var(--mui-palette-neutral-300)',
+        level1: 'var(--mui-palette-neutral-50)',
+        level2: 'var(--mui-palette-neutral-100)',
+        level3: 'var(--mui-palette-neutral-200)',
       },
       common: { black: '#000000', white: '#ffffff' },
       divider: 'var(--mui-palette-neutral-200)',

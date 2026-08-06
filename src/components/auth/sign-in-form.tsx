@@ -79,7 +79,7 @@ export function SignInForm(): React.JSX.Element {
           sx={{
             fontSize: '1.75rem',
             fontWeight: 700,
-            background: 'linear-gradient(135deg, #15b79f 0%, #635bff 100%)',
+            background: (theme) => `linear-gradient(135deg, ${theme.palette.success.main} 0%, ${theme.palette.primary.main} 100%)`,
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
@@ -90,7 +90,7 @@ export function SignInForm(): React.JSX.Element {
           Bem-vindo de volta
         </Typography>
         <Typography
-          sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.9rem', lineHeight: 1.6 }}
+          sx={{ color: 'text.secondary', fontSize: '0.9rem', lineHeight: 1.6 }}
           variant="body2"
         >
           Entre na sua conta para continuar
@@ -107,7 +107,7 @@ export function SignInForm(): React.JSX.Element {
                 <InputLabel
                   sx={{
                     '&.Mui-focused': {
-                      color: 'rgba(255, 255, 255, 0.7)',
+                      color: 'text.secondary',
                     },
                   }}
                 >
@@ -121,33 +121,33 @@ export function SignInForm(): React.JSX.Element {
                     <InputAdornment position="start">
                       <Envelope
                         fontSize="var(--icon-fontSize-md)"
-                        style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+                        style={{ color: 'var(--mui-palette-text-disabled)' }}
                       />
                     </InputAdornment>
                   }
                   sx={{
                     borderRadius: '14px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    backgroundColor: 'action.hover',
                     transition: 'all 0.2s ease',
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'rgba(255, 255, 255, 0.08)',
+                      borderColor: 'divider',
                     },
                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'rgba(255, 255, 255, 0.15)',
+                      borderColor: 'text.secondary',
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'rgba(21, 183, 159, 0.5)',
+                      borderColor: 'success.main',
                       borderWidth: 1.5,
                     },
                     '& input': {
-                      color: 'rgba(255, 255, 255, 0.9)',
+                      color: 'text.primary',
                       '&::placeholder': {
-                        color: 'rgba(255, 255, 255, 0.3)',
+                        color: 'text.secondary',
                       },
                     },
                   }}
                 />
-                {errors.email ? <FormHelperText sx={{ color: '#f97970' }}>{errors.email.message}</FormHelperText> : null}
+                {errors.email ? <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
@@ -160,7 +160,7 @@ export function SignInForm(): React.JSX.Element {
                 <InputLabel
                   sx={{
                     '&.Mui-focused': {
-                      color: 'rgba(255, 255, 255, 0.7)',
+                      color: 'text.secondary',
                     },
                   }}
                 >
@@ -174,7 +174,7 @@ export function SignInForm(): React.JSX.Element {
                     <InputAdornment position="start">
                       <Lock
                         fontSize="var(--icon-fontSize-md)"
-                        style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+                        style={{ color: 'var(--mui-palette-text-disabled)' }}
                       />
                     </InputAdornment>
                   }
@@ -186,8 +186,8 @@ export function SignInForm(): React.JSX.Element {
                         }}
                         edge="end"
                         sx={{
-                          color: 'rgba(255, 255, 255, 0.4)',
-                          '&:hover': { color: 'rgba(255, 255, 255, 0.7)' },
+                          color: 'text.secondary',
+                          '&:hover': { color: 'text.primary' },
                         }}
                       >
                         {showPassword ? (
@@ -200,28 +200,28 @@ export function SignInForm(): React.JSX.Element {
                   }
                   sx={{
                     borderRadius: '14px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    backgroundColor: 'action.hover',
                     transition: 'all 0.2s ease',
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'rgba(255, 255, 255, 0.08)',
+                      borderColor: 'divider',
                     },
                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'rgba(255, 255, 255, 0.15)',
+                      borderColor: 'text.secondary',
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'rgba(21, 183, 159, 0.5)',
+                      borderColor: 'success.main',
                       borderWidth: 1.5,
                     },
                     '& input': {
-                      color: 'rgba(255, 255, 255, 0.9)',
+                      color: 'text.primary',
                       '&::placeholder': {
-                        color: 'rgba(255, 255, 255, 0.3)',
+                        color: 'text.secondary',
                       },
                     },
                   }}
                 />
                 {errors.password ? (
-                  <FormHelperText sx={{ color: '#f97970' }}>{errors.password.message}</FormHelperText>
+                  <FormHelperText sx={{ color: 'error.main' }}>{errors.password.message}</FormHelperText>
                 ) : null}
               </FormControl>
             )}
@@ -233,12 +233,12 @@ export function SignInForm(): React.JSX.Element {
               href={paths.auth.resetPassword}
               underline="hover"
               sx={{
-                color: 'rgba(255, 255, 255, 0.45)',
+                color: 'text.secondary',
                 fontSize: '0.825rem',
                 fontWeight: 500,
                 transition: 'color 0.2s ease',
                 '&:hover': {
-                  color: '#15b79f',
+                  color: 'success.main',
                 },
               }}
             >
@@ -251,10 +251,11 @@ export function SignInForm(): React.JSX.Element {
               severity="error"
               sx={{
                 borderRadius: '12px',
-                backgroundColor: 'rgba(249, 121, 112, 0.1)',
-                border: '1px solid rgba(249, 121, 112, 0.2)',
-                color: '#f97970',
-                '& .MuiAlert-icon': { color: '#f97970' },
+                backgroundColor: 'error.light',
+                border: '1px solid',
+                borderColor: 'error.main',
+                color: 'error.dark',
+                '& .MuiAlert-icon': { color: 'error.main' },
               }}
             >
               {errors.root.message}
@@ -281,18 +282,18 @@ export function SignInForm(): React.JSX.Element {
         </Stack>
       </form>
 
-      <Typography align="center" sx={{ color: 'rgba(255, 255, 255, 0.45)', fontSize: '0.875rem' }}>
+      <Typography align="center" sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
         Ainda nao tem conta?{' '}
         <Link
           component={RouterLink}
           href={paths.auth.signUp}
           underline="hover"
           sx={{
-            color: '#15b79f',
+            color: 'success.main',
             fontWeight: 600,
             transition: 'color 0.2s ease',
             '&:hover': {
-              color: '#2ed3b8',
+              color: 'success.light',
             },
           }}
         >

@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { List as ListIcon } from '@phosphor-icons/react/dist/ssr/List';
-import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
 import { Moon as MoonIcon } from '@phosphor-icons/react/dist/ssr/Moon';
 import { Sun as SunIcon } from '@phosphor-icons/react/dist/ssr/Sun';
 
@@ -34,7 +33,7 @@ export function MainNav(): React.JSX.Element {
           backgroundColor: 'var(--mui-palette-background-paper)',
           position: 'sticky',
           top: 0,
-          zIndex: 'var(--mui-zIndex-appBar)',
+          zIndex: 'var(--MainNav-zIndex)',
         }}
       >
         <Stack
@@ -51,11 +50,6 @@ export function MainNav(): React.JSX.Element {
             >
               <ListIcon />
             </IconButton>
-            <Tooltip title="Search">
-              <IconButton>
-                <MagnifyingGlassIcon />
-              </IconButton>
-            </Tooltip>
           </Stack>
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
             <Tooltip title={mode === 'dark' ? 'Modo claro' : 'Modo escuro'}>

@@ -23,13 +23,14 @@ import { z as zod } from 'zod';
 import { paths } from '@/paths';
 import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
+import { MaskedTextField } from '@/components/core/masked-text-field';
 
 const schema = zod.object({
-  name: zod.string().min(1, { message: 'Nome é obrigatório' }),
+  name: zod.string().min(1, { message: 'Nome é obrigatório' }).regex(/^[a-zA-ZÀ-ÿ\s]*$/, 'Nome deve conter apenas letras e espaços'),
   email: zod.string().min(1, { message: 'Email é obrigatório' }).email('Email inválido'),
   password: zod.string().min(6, { message: 'Senha deve ter pelo menos 6 caracteres' }),
   role: zod.string().min(1, { message: 'Perfil é obrigatório' }),
-  phone: zod.string().optional(),
+  phone: zod.string().optional().refine((val) => !val || /^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(val), 'Telefone inválido'),
   terms: zod.boolean().refine((value) => value, 'Você deve aceitar os termos'),
 });
 
@@ -138,11 +139,17 @@ export function SignUpForm(): React.JSX.Element {
           <Controller
             control={control}
             name="phone"
-            render={({ field }) => (
-              <FormControl>
-                <InputLabel>Telefone (opcional)</InputLabel>
-                <OutlinedInput {...field} label="Telefone (opcional)" />
-              </FormControl>
+            render={({ field, fieldState }) => (
+              <MaskedTextField
+                value={field.value}
+                onAccept={(_maskedValue, unmaskedValue) => field.onChange(unmaskedValue)}
+                mask="(00) 00000-0000"
+                label="Telefone (opcional)"
+                placeholder="(XX) XXXXX-XXXX"
+                fullWidth
+                error={Boolean(fieldState.error)}
+                helperText={fieldState.error?.message}
+              />
             )}
           />
           <Controller

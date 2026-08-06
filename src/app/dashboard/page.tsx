@@ -33,7 +33,7 @@ function StatCard({ title, value, icon, color }: StatCardProps): React.JSX.Eleme
               justifyContent: 'center',
               borderRadius: '50%',
               bgcolor: color,
-              color: 'white',
+              color: 'common.white',
               width: 56,
               height: 56,
             }}
@@ -122,16 +122,16 @@ export default function DashboardPage(): React.JSX.Element {
         <Typography variant="h4">Dashboard do Professor</Typography>
         <Grid container spacing={3}>
           <Grid xs={12} sm={6} lg={3}>
-            <StatCard title="Tarefas" value={teacherData.tarefas} icon={<ClipboardText size={28} />} color="#1976d2" />
+            <StatCard title="Tarefas" value={teacherData.tarefas} icon={<ClipboardText size={28} />} color="primary.main" />
           </Grid>
           <Grid xs={12} sm={6} lg={3}>
-            <StatCard title="Leituras" value={teacherData.leituras} icon={<BookOpen size={28} />} color="#2e7d32" />
+            <StatCard title="Leituras" value={teacherData.leituras} icon={<BookOpen size={28} />} color="success.main" />
           </Grid>
           <Grid xs={12} sm={6} lg={3}>
-            <StatCard title="Provas" value={teacherData.provas} icon={<FileText size={28} />} color="#ed6c02" />
+            <StatCard title="Provas" value={teacherData.provas} icon={<FileText size={28} />} color="warning.main" />
           </Grid>
           <Grid xs={12} sm={6} lg={3}>
-            <StatCard title="Alunos" value={teacherData.totalAlunos} icon={<Users size={28} />} color="#9c27b0" />
+            <StatCard title="Alunos" value={teacherData.totalAlunos} icon={<Users size={28} />} color="secondary.main" />
           </Grid>
         </Grid>
         <RecentContents contents={teacherData.recentContents} />
@@ -145,20 +145,20 @@ export default function DashboardPage(): React.JSX.Element {
         <Typography variant="h4">Dashboard do Aluno</Typography>
         <Grid container spacing={3}>
           <Grid xs={12} sm={6} lg={3}>
-            <StatCard title="Tarefas" value={studentData.tarefas} icon={<ClipboardText size={28} />} color="#1976d2" />
+            <StatCard title="Tarefas" value={studentData.tarefas} icon={<ClipboardText size={28} />} color="primary.main" />
           </Grid>
           <Grid xs={12} sm={6} lg={3}>
-            <StatCard title="Leituras" value={studentData.leituras} icon={<BookOpen size={28} />} color="#2e7d32" />
+            <StatCard title="Leituras" value={studentData.leituras} icon={<BookOpen size={28} />} color="success.main" />
           </Grid>
           <Grid xs={12} sm={6} lg={3}>
-            <StatCard title="Provas" value={studentData.provas} icon={<FileText size={28} />} color="#ed6c02" />
+            <StatCard title="Provas" value={studentData.provas} icon={<FileText size={28} />} color="warning.main" />
           </Grid>
           <Grid xs={12} sm={6} lg={3}>
             <StatCard
               title="Provas Realizadas"
               value={studentData.provasRealizadas}
               icon={<GraduationCap size={28} />}
-              color="#9c27b0"
+              color="secondary.main"
             />
           </Grid>
         </Grid>

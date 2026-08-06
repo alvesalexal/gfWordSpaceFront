@@ -399,7 +399,7 @@ export default function LeiturasPage(): React.JSX.Element {
               <Typography variant="h6" sx={{ mb: 1 }}>
                 Comentários
               </Typography>
-              {isStudent && (
+              {(isStudent || isTeacher) && (
                 <Stack spacing={1} sx={{ mb: 2 }}>
                   <TextField
                     fullWidth
@@ -419,30 +419,40 @@ export default function LeiturasPage(): React.JSX.Element {
               )}
               <List>
                 {(selectedLeitura.Comment || []).map((comment) => {
-                  const isOwner = user && comment.student.person.id === Number(user.id);
+                  const isStudentComment = !!comment.fk_student_id;
+                  const isTeacherComment = !!comment.fk_teacher_id;
+                  const isOwner = isStudent && isStudentComment && user && comment.student?.person.id === Number(user.id);
+                  const isTeacherOwner = isTeacher && isTeacherComment && user && comment.teacher?.person.id === Number(user.id);
+                  const canDelete = isStudent ? isOwner : isTeacher && (isStudentComment || isTeacherOwner);
+                  const canEdit = isStudent ? isOwner : isTeacherOwner;
+                  const authorName = comment.student?.person?.name || comment.teacher?.person?.name || 'Autor desconhecido';
                   return (
                     <ListItem
                       key={comment.id}
                       alignItems="flex-start"
                       secondaryAction={
-                        isStudent && isOwner && editingCommentId !== comment.id ? (
+                        (canEdit || canDelete) && editingCommentId !== comment.id ? (
                           <Stack direction="row" spacing={0.5}>
-                            <IconButton
-                              size="small"
-                              onClick={() => {
-                                setEditingCommentId(comment.id);
-                                setEditingCommentText(comment.message);
-                              }}
-                            >
-                              <PencilIcon fontSize={14} />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              color="error"
-                              onClick={() => setDeletingCommentId(comment.id)}
-                            >
-                              <TrashIcon fontSize={14} />
-                            </IconButton>
+                            {canEdit && (
+                              <IconButton
+                                size="small"
+                                onClick={() => {
+                                  setEditingCommentId(comment.id);
+                                  setEditingCommentText(comment.message);
+                                }}
+                              >
+                                <PencilIcon fontSize={14} />
+                              </IconButton>
+                            )}
+                            {canDelete && (
+                              <IconButton
+                                size="small"
+                                color="error"
+                                onClick={() => setDeletingCommentId(comment.id)}
+                              >
+                                <TrashIcon fontSize={14} />
+                              </IconButton>
+                            )}
                           </Stack>
                         ) : undefined
                       }
@@ -481,7 +491,16 @@ export default function LeiturasPage(): React.JSX.Element {
                         </Stack>
                       ) : (
                         <ListItemText
-                          primary={comment.student.person.name}
+                          primary={
+                            <Stack direction="row" spacing={1} alignItems="center">
+                              <Typography component="span" variant="body2" fontWeight={isTeacherComment ? 600 : 400}>
+                                {authorName}
+                              </Typography>
+                              {isTeacherComment && (
+                                <Chip label="Professor" size="small" color="secondary" variant="outlined" sx={{ fontSize: '0.6rem', height: 18 }} />
+                              )}
+                            </Stack>
+                          }
                           secondary={
                             <>
                               <Typography component="span" variant="body2">

@@ -15,6 +15,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { api, endpoints } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from '@/hooks/use-user';
+import { MaskedTextField } from '@/components/core/masked-text-field';
 
 export function AccountDetailsForm(): React.JSX.Element {
   const { user, checkSession } = useUser();
@@ -66,16 +67,14 @@ export function AccountDetailsForm(): React.JSX.Element {
               </FormControl>
             </Grid>
             <Grid md={6} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel>Telefone</InputLabel>
-                <OutlinedInput
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  label="Telefone"
-                  name="phone"
-                  type="tel"
-                />
-              </FormControl>
+              <MaskedTextField
+                value={phone}
+                onAccept={(_maskedValue, unmaskedValue) => setPhone(unmaskedValue)}
+                mask="(00) 00000-0000"
+                label="Telefone"
+                placeholder="(XX) XXXXX-XXXX"
+                fullWidth
+              />
             </Grid>
           </Grid>
         </CardContent>
