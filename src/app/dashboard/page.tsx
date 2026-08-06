@@ -177,7 +177,7 @@ export default function DashboardPage(): React.JSX.Element {
       <Typography variant="h4">Bem-vindo ao WordSpace</Typography>
       <Card>
         <CardContent>
-          <Typography>Para começar, entre em uma turma ou aguarde o professor adicioná-la.</Typography>
+          <Typography>Aguarde até que um professor o adicione a uma turma.</Typography>
         </CardContent>
       </Card>
     </Stack>
