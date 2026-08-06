@@ -99,7 +99,7 @@ export function ConfirmResetPasswordForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.token)}>
                 <InputLabel>Token</InputLabel>
                 <OutlinedInput {...field} label="Token" multiline minRows={2} />
-                {errors.token ? <FormHelperText>{errors.token.message}</FormHelperText> : null}
+                {errors.token ? <FormHelperText sx={{ color: 'error.main' }}>{errors.token.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
@@ -110,7 +110,7 @@ export function ConfirmResetPasswordForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.password)}>
                 <InputLabel>Nova senha</InputLabel>
                 <OutlinedInput {...field} label="Nova senha" type="password" />
-                {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
+                {errors.password ? <FormHelperText sx={{ color: 'error.main' }}>{errors.password.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
@@ -121,11 +121,22 @@ export function ConfirmResetPasswordForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.confirmPassword)}>
                 <InputLabel>Confirmar senha</InputLabel>
                 <OutlinedInput {...field} label="Confirmar senha" type="password" />
-                {errors.confirmPassword ? <FormHelperText>{errors.confirmPassword.message}</FormHelperText> : null}
+                {errors.confirmPassword ? <FormHelperText sx={{ color: 'error.main' }}>{errors.confirmPassword.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
-          {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
+          {errors.root ? (
+            <Alert
+              severity="error"
+              sx={{
+                borderRadius: '12px',
+                color: 'error.dark',
+                '& .MuiAlert-icon': { color: 'error.main' },
+              }}
+            >
+              {errors.root.message}
+            </Alert>
+          ) : null}
           <LoadingButton loading={isPending} type="submit" variant="contained">
             Redefinir senha
           </LoadingButton>

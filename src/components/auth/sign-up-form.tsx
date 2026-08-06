@@ -30,7 +30,7 @@ const schema = zod.object({
   email: zod.string().min(1, { message: 'Email é obrigatório' }).email('Email inválido'),
   password: zod.string().min(6, { message: 'Senha deve ter pelo menos 6 caracteres' }),
   role: zod.string().min(1, { message: 'Perfil é obrigatório' }),
-  phone: zod.string().optional().refine((val) => !val || /^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(val), 'Telefone inválido'),
+  phone: zod.string().optional(),
   terms: zod.boolean().refine((value) => value, 'Você deve aceitar os termos'),
 });
 
@@ -96,7 +96,7 @@ export function SignUpForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.name)}>
                 <InputLabel>Nome completo</InputLabel>
                 <OutlinedInput {...field} label="Nome completo" />
-                {errors.name ? <FormHelperText>{errors.name.message}</FormHelperText> : null}
+                {errors.name ? <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
@@ -107,7 +107,7 @@ export function SignUpForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.email)}>
                 <InputLabel>Email</InputLabel>
                 <OutlinedInput {...field} label="Email" type="email" />
-                {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
+                {errors.email ? <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
@@ -118,7 +118,7 @@ export function SignUpForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.password)}>
                 <InputLabel>Senha</InputLabel>
                 <OutlinedInput {...field} label="Senha" type="password" />
-                {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
+                {errors.password ? <FormHelperText sx={{ color: 'error.main' }}>{errors.password.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
@@ -132,7 +132,7 @@ export function SignUpForm(): React.JSX.Element {
                   <MenuItem value="student">Aluno</MenuItem>
                   <MenuItem value="teacher">Professor</MenuItem>
                 </Select>
-                {errors.role ? <FormHelperText>{errors.role.message}</FormHelperText> : null}
+                {errors.role ? <FormHelperText sx={{ color: 'error.main' }}>{errors.role.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
@@ -165,11 +165,22 @@ export function SignUpForm(): React.JSX.Element {
                     </React.Fragment>
                   }
                 />
-                {errors.terms ? <FormHelperText error>{errors.terms.message}</FormHelperText> : null}
+                {errors.terms ? <FormHelperText sx={{ color: 'error.main' }}>{errors.terms.message}</FormHelperText> : null}
               </div>
             )}
           />
-          {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
+          {errors.root ? (
+            <Alert
+              severity="error"
+              sx={{
+                borderRadius: '12px',
+                color: 'error.dark',
+                '& .MuiAlert-icon': { color: 'error.main' },
+              }}
+            >
+              {errors.root.message}
+            </Alert>
+          ) : null}
           <LoadingButton loading={isPending} type="submit" variant="contained">
             Cadastrar
           </LoadingButton>

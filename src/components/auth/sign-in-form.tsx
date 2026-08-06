@@ -251,9 +251,6 @@ export function SignInForm(): React.JSX.Element {
               severity="error"
               sx={{
                 borderRadius: '12px',
-                backgroundColor: 'error.light',
-                border: '1px solid',
-                borderColor: 'error.main',
                 color: 'error.dark',
                 '& .MuiAlert-icon': { color: 'error.main' },
               }}

@@ -36,6 +36,11 @@ function StatCard({ title, value, icon, color }: StatCardProps): React.JSX.Eleme
               color: 'common.white',
               width: 56,
               height: 56,
+              flexShrink: 0,
+              '& svg': {
+                width: 28,
+                height: 28,
+              },
             }}
           >
             {icon}
@@ -158,7 +163,7 @@ export default function DashboardPage(): React.JSX.Element {
               title="Provas Realizadas"
               value={studentData.provasRealizadas}
               icon={<GraduationCap size={28} />}
-              color="secondary.main"
+              color="success.main"
             />
           </Grid>
         </Grid>

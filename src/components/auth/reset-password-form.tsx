@@ -95,11 +95,22 @@ export function ResetPasswordForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.email)}>
                 <InputLabel>Email</InputLabel>
                 <OutlinedInput {...field} label="Email" type="email" />
-                {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
+                {errors.email ? <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText> : null}
               </FormControl>
             )}
           />
-          {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
+          {errors.root ? (
+            <Alert
+              severity="error"
+              sx={{
+                borderRadius: '12px',
+                color: 'error.dark',
+                '& .MuiAlert-icon': { color: 'error.main' },
+              }}
+            >
+              {errors.root.message}
+            </Alert>
+          ) : null}
           <LoadingButton loading={isPending} type="submit" variant="contained">
             Enviar token
           </LoadingButton>
