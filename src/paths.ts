@@ -8,8 +8,6 @@ export const paths = {
     realizarTarefa: (contentId: number | string) => `/dashboard/tarefas/realizar/${contentId}`,
     leituras: '/dashboard/leituras',
     provas: '/dashboard/provas',
-    realizarProva: (testId: number | string) => `/dashboard/provas/realizar/${testId}`,
     conta: '/dashboard/conta',
   },
-  errors: { notFound: '/errors/not-found' },
 } as const;

@@ -10,7 +10,6 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { GearSix as GearSixIcon } from '@phosphor-icons/react/dist/ssr/GearSix';
 import { Moon as MoonIcon } from '@phosphor-icons/react/dist/ssr/Moon';
 import { SignOut as SignOutIcon } from '@phosphor-icons/react/dist/ssr/SignOut';
 import { Sun as SunIcon } from '@phosphor-icons/react/dist/ssr/Sun';

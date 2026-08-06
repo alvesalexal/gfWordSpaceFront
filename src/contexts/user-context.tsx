@@ -53,5 +53,3 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
 
   return <UserContext.Provider value={{ ...state, checkSession }}>{children}</UserContext.Provider>;
 }
-
-export const UserConsumer = UserContext.Consumer;
