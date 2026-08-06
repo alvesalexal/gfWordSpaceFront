@@ -78,28 +78,7 @@ export function SideNav(): React.JSX.Element {
     >
       <Stack spacing={2} sx={{ p: 3 }}>
         <Box component={RouterLink} href={paths.home} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <LogoLeao width={32} height={32} />
-        </Box>
-        <Box
-          sx={{
-            alignItems: 'center',
-            backgroundColor: 'var(--Selector-bg)',
-            border: '1px solid var(--SideNav-border)',
-            borderRadius: '12px',
-            cursor: 'pointer',
-            display: 'flex',
-            p: '4px 12px',
-          }}
-        >
-          <Box sx={{ flex: '1 1 auto' }}>
-            <Typography color="var(--NavItem-icon-color)" variant="body2">
-              Estudos Biblicos
-            </Typography>
-            <Typography color="inherit" variant="subtitle1">
-              WordSpace
-            </Typography>
-          </Box>
-          <CaretUpDownIcon />
+          <LogoLeao width={75} height={75} />
         </Box>
       </Stack>
       <Divider sx={{ borderColor: 'var(--SideNav-border)' }} />
@@ -158,6 +137,7 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
           position: 'relative',
           textDecoration: 'none',
           whiteSpace: 'nowrap',
+          transition: 'background-color 0.15s ease, color 0.15s ease',
           '&:hover': { bgcolor: active ? undefined : 'var(--NavItem-hover-bg)' },
           ...(disabled && {
             color: 'var(--NavItem-disabled-color)',
@@ -166,6 +146,16 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
           ...(active && {
             bgcolor: 'var(--NavItem-active-background)',
             color: 'var(--NavItem-active-color)',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              left: 0,
+              top: '25%',
+              bottom: '25%',
+              width: 3,
+              borderRadius: 2,
+              bgcolor: 'var(--NavItem-active-color)',
+            },
           }),
         }}
       >

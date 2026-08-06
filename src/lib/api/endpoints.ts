@@ -23,6 +23,8 @@ export const endpoints = {
     fullTest: '/content/full-test',
     fullTestById: (id: number) => `/content/full-test/${id}` as const,
     comment: (id: number) => `/content/${id}/comment` as const,
+    commentUpdate: (id: number) => `/content/comment/${id}` as const,
+    commentDelete: (id: number) => `/content/comment/${id}` as const,
     submitTest: (id: number) => `/content/test/${id}/submit` as const,
   },
   person: {

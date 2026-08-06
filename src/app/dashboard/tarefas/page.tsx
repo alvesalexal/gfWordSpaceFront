@@ -14,6 +14,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -26,7 +27,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import { GridCardsSkeleton } from '@/components/dashboard/skeletons';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   CheckCircle,
@@ -251,8 +252,9 @@ export default function TarefasPage(): React.JSX.Element {
   }
 
   React.useEffect(() => {
+    if (!user) return;
     load();
-  }, [isTeacher]);
+  }, [user, isTeacher]);
 
   const onSubmit = async (values: TarefaFormValues) => {
     setIsPending(true);
@@ -339,7 +341,8 @@ export default function TarefasPage(): React.JSX.Element {
     setIsDeleting(true);
     try {
       await api.delete(endpoints.content.byId(deleteId));
-      setTarefas((prev) => prev.filter((t) => t.id !== deleteId));
+      await load();
+      showSuccess('Tarefa excluída com sucesso!');
       setDeleteId(null);
     } catch (err) {
       showError('Erro ao excluir tarefa');
@@ -363,7 +366,7 @@ export default function TarefasPage(): React.JSX.Element {
   const totalQuestions = (test: { Question?: QuestionData[] }) => test.Question?.length || 0;
 
   if (loading) {
-    return <Typography>Carregando...</Typography>;
+    return <GridCardsSkeleton />;
   }
 
   return (
@@ -387,7 +390,7 @@ export default function TarefasPage(): React.JSX.Element {
             }
           }}
         >
-          <DialogTitle>{editingContent ? 'Editar Tarefa' : 'Nova Tarefa'}</DialogTitle>
+          <DialogTitle sx={{ px: 3, py: 2 }}>{editingContent ? 'Editar Tarefa' : 'Nova Tarefa'}</DialogTitle>
           <DialogContent dividers>
             <Stack spacing={3}>
               <Stack spacing={2}>
@@ -481,11 +484,11 @@ export default function TarefasPage(): React.JSX.Element {
               </Stack>
             </Stack>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={closeForm} disabled={isPending}>
+          <DialogActions sx={{ px: 3, py: 2 }}>
+            <Button variant="outlined" onClick={closeForm} disabled={isPending} sx={{ px: 4 }}>
               Cancelar
             </Button>
-            <LoadingButton variant="contained" type="submit" form="tarefa-form" loading={isPending}>
+            <LoadingButton variant="contained" type="submit" form="tarefa-form" loading={isPending} sx={{ px: 4 }}>
               {editingContent ? 'Salvar Alterações' : 'Criar Tarefa'}
             </LoadingButton>
           </DialogActions>
@@ -547,19 +550,7 @@ export default function TarefasPage(): React.JSX.Element {
                         {tarefa.subTitle}
                       </Typography>
                     )}
-                    <Chip label={tarefa.class.name} size="small" color="primary" variant="outlined" />
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                      }}
-                    >
-                      {tarefa.message.replace(/<[^>]*>/g, '')}
-                    </Typography>
+                    <Chip label={tarefa.class.name} size="small" color="primary" variant="outlined" sx={{ fontSize: '0.7rem', height: 24, width: 'fit-content' }} />
 
                     {tarefa.Test && tarefa.Test.length > 0 && (
                       <Stack spacing={1} sx={{ mt: 1 }}>
@@ -639,15 +630,15 @@ export default function TarefasPage(): React.JSX.Element {
       )}
 
       <Dialog open={deleteId !== null} onClose={() => setDeleteId(null)}>
-        <DialogTitle>Confirmar exclusão</DialogTitle>
+        <DialogTitle sx={{ px: 3, py: 2 }}>Confirmar exclusão</DialogTitle>
         <DialogContent>
           <Typography>Tem certeza que deseja excluir esta tarefa?</Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteId(null)} disabled={isDeleting}>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button variant="outlined" onClick={() => setDeleteId(null)} disabled={isDeleting} sx={{ px: 4 }}>
             Cancelar
           </Button>
-          <LoadingButton color="error" onClick={handleDelete} loading={isDeleting}>
+          <LoadingButton variant="contained" color="error" onClick={handleDelete} loading={isDeleting} sx={{ px: 4 }}>
             Excluir
           </LoadingButton>
         </DialogActions>
@@ -662,7 +653,7 @@ export default function TarefasPage(): React.JSX.Element {
       >
         {selectedTarefa && (
           <>
-            <DialogTitle>
+            <DialogTitle sx={{ px: 3, py: 2 }}>
               <Stack spacing={1}>
                 <Typography variant="h5">{selectedTarefa.title}</Typography>
                 {selectedTarefa.subTitle && (
@@ -690,8 +681,8 @@ export default function TarefasPage(): React.JSX.Element {
                 </>
               )}
             </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setSelectedTarefa(null)}>Fechar</Button>
+            <DialogActions sx={{ px: 3, py: 2 }}>
+              <Button variant="outlined" onClick={() => setSelectedTarefa(null)} sx={{ px: 4 }}>Fechar</Button>
             </DialogActions>
           </>
         )}

@@ -63,11 +63,12 @@ export interface CommentData {
   id: number;
   message: string;
   created_at: string;
+  updated_at?: string;
   fk_student_id: number;
   fk_content_id: number;
   student: {
     id: number;
-    person: { name: string; email: string };
+    person: { id: number; name: string; email: string };
   };
 }
 

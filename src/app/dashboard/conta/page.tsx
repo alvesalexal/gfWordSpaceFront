@@ -7,8 +7,20 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import { AccountDetailsForm } from '@/components/dashboard/account/account-details-form';
 import { AccountInfo } from '@/components/dashboard/account/account-info';
+import { AccountSkeleton } from '@/components/dashboard/skeletons';
 
 export default function ContaPage(): React.JSX.Element {
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <AccountSkeleton />;
+  }
+
   return (
     <Stack spacing={3}>
       <div>

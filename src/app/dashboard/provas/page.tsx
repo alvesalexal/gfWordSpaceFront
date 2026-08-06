@@ -14,6 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -25,7 +26,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import { GridCardsSkeleton } from '@/components/dashboard/skeletons';
 import Grid from '@mui/material/Unstable_Grid2';
 import {
   CheckCircle,
@@ -239,34 +240,36 @@ export default function ProvasPage(): React.JSX.Element {
     resolver: zodResolver(provaSchema),
   });
 
-  React.useEffect(() => {
-    async function load() {
-      try {
-        const [provasData, classesData] = await Promise.all([
-          api.get<ContentData[]>(endpoints.content.byType('prova')),
-          isTeacher
-            ? api.get<ClassData[]>(endpoints.dashboard.teacherClasses)
-            : api.get<ClassData[]>(endpoints.dashboard.studentClasses),
-        ]);
-        setContents(provasData);
-        setClasses(classesData);
+  async function load() {
+    try {
+      const [provasData, classesData] = await Promise.all([
+        api.get<ContentData[]>(endpoints.content.byType('prova')),
+        isTeacher
+          ? api.get<ClassData[]>(endpoints.dashboard.teacherClasses)
+          : api.get<ClassData[]>(endpoints.dashboard.studentClasses),
+      ]);
+      setContents(provasData);
+      setClasses(classesData);
 
-        if (isStudent) {
-          try {
-            const performsData = await api.get<PerformData[]>(endpoints.content.myPerforms);
-            setPerforms(performsData);
-          } catch {
-            // ignore
-          }
+      if (isStudent) {
+        try {
+          const performsData = await api.get<PerformData[]>(endpoints.content.myPerforms);
+          setPerforms(performsData);
+        } catch {
+          // ignore
         }
-      } catch {
-        showError('Erro ao carregar provas');
-      } finally {
-        setLoading(false);
       }
+    } catch {
+      showError('Erro ao carregar provas');
+    } finally {
+      setLoading(false);
     }
+  }
+
+  React.useEffect(() => {
+    if (!user) return;
     load();
-  }, [isTeacher]);
+  }, [user, isTeacher]);
 
   const onSubmit = async (values: ProvaFormValues) => {
     setIsPending(true);
@@ -342,7 +345,8 @@ export default function ProvasPage(): React.JSX.Element {
     setIsDeleting(true);
     try {
       await api.delete(endpoints.content.byId(deleteId));
-      setContents((prev) => prev.filter((c) => c.id !== deleteId));
+      await load();
+      showSuccess('Prova excluída com sucesso!');
       setDeleteId(null);
     } catch {
       showError('Erro ao excluir prova');
@@ -382,7 +386,7 @@ export default function ProvasPage(): React.JSX.Element {
   const totalQuestions = (test: { Question?: QuestionData[] }) => test.Question?.length || 0;
 
   if (loading) {
-    return <Typography>Carregando...</Typography>;
+    return <GridCardsSkeleton />;
   }
 
   return (
@@ -406,7 +410,7 @@ export default function ProvasPage(): React.JSX.Element {
             }
           }}
         >
-          <DialogTitle>{editingContent ? 'Editar Prova' : 'Nova Prova'}</DialogTitle>
+          <DialogTitle sx={{ px: 3, py: 2 }}>{editingContent ? 'Editar Prova' : 'Nova Prova'}</DialogTitle>
           <DialogContent dividers>
             <Stack spacing={3}>
               <Stack spacing={2}>
@@ -518,11 +522,11 @@ export default function ProvasPage(): React.JSX.Element {
               </Stack>
             </Stack>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={closeForm} disabled={isPending}>
+          <DialogActions sx={{ px: 3, py: 2 }}>
+            <Button variant="outlined" onClick={closeForm} disabled={isPending} sx={{ px: 4 }}>
               Cancelar
             </Button>
-            <LoadingButton variant="contained" type="submit" form="prova-form" loading={isPending}>
+            <LoadingButton variant="contained" type="submit" form="prova-form" loading={isPending} sx={{ px: 4 }}>
               {editingContent ? 'Salvar Alterações' : 'Criar Prova'}
             </LoadingButton>
           </DialogActions>
@@ -584,19 +588,7 @@ export default function ProvasPage(): React.JSX.Element {
                         {content.subTitle}
                       </Typography>
                     )}
-                    <Chip label={content.class.name} size="small" color="primary" variant="outlined" />
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                      }}
-                    >
-                      {content.message.replace(/<[^>]*>/g, '')}
-                    </Typography>
+                    <Chip label={content.class.name} size="small" color="primary" variant="outlined" sx={{ fontSize: '0.7rem', height: 24, width: 'fit-content' }} />
                     {content.Test && content.Test.length > 0 && (
                       <Stack spacing={1} sx={{ mt: 1 }}>
                         {content.Test.map((test) => {
@@ -668,15 +660,15 @@ export default function ProvasPage(): React.JSX.Element {
       )}
 
       <Dialog open={deleteId !== null} onClose={() => setDeleteId(null)}>
-        <DialogTitle>Confirmar exclusão</DialogTitle>
+        <DialogTitle sx={{ px: 3, py: 2 }}>Confirmar exclusão</DialogTitle>
         <DialogContent>
           <Typography>Tem certeza que deseja excluir esta prova?</Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteId(null)} disabled={isDeleting}>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button variant="outlined" onClick={() => setDeleteId(null)} disabled={isDeleting} sx={{ px: 4 }}>
             Cancelar
           </Button>
-          <LoadingButton color="error" onClick={handleDelete} loading={isDeleting}>
+          <LoadingButton variant="contained" color="error" onClick={handleDelete} loading={isDeleting} sx={{ px: 4 }}>
             Excluir
           </LoadingButton>
         </DialogActions>
@@ -691,7 +683,7 @@ export default function ProvasPage(): React.JSX.Element {
       >
         {selectedContent && (
           <>
-            <DialogTitle>
+            <DialogTitle sx={{ px: 3, py: 2 }}>
               <Stack spacing={1}>
                 <Typography variant="h5">{selectedContent.title}</Typography>
                 {selectedContent.subTitle && (
@@ -775,8 +767,8 @@ export default function ProvasPage(): React.JSX.Element {
                 </>
               )}
             </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setSelectedContent(null)}>Fechar</Button>
+            <DialogActions sx={{ px: 3, py: 2 }}>
+              <Button variant="outlined" onClick={() => setSelectedContent(null)} sx={{ px: 4 }}>Fechar</Button>
             </DialogActions>
           </>
         )}

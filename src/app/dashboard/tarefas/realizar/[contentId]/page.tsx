@@ -88,6 +88,9 @@ export default function RealizarTarefaPage(): React.JSX.Element {
           if (existingPerform) {
             setResult(existingPerform);
           }
+          setContent(foundContent);
+          setTest(foundTest);
+          setQuestions(foundTest.Question || []);
           setLoading(false);
           return;
         }
@@ -166,7 +169,7 @@ export default function RealizarTarefaPage(): React.JSX.Element {
                   sx={{
                     p: 2,
                     borderRadius: 1,
-                    bgcolor: 'grey.100',
+                    bgcolor: (theme) => theme.palette.background.paper,
                     textAlign: 'center',
                   }}
                 >
@@ -222,9 +225,13 @@ export default function RealizarTarefaPage(): React.JSX.Element {
                         ))}
                       </Stack>
                     ) : (
-                      <Typography variant="body2" sx={{ pl: 2, whiteSpace: 'pre-wrap' }}>
-                        {studentAnswer || 'Sem resposta'}
-                      </Typography>
+                      <Box sx={{ pl: 2 }}>
+                        {studentAnswer ? (
+                          <HtmlContent html={studentAnswer} />
+                        ) : (
+                          <Typography variant="body2">Sem resposta</Typography>
+                        )}
+                      </Box>
                     )}
                   </Box>
                 );

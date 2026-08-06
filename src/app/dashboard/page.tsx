@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Container from '@mui/material/Container';
+import { DashboardSkeleton } from '@/components/dashboard/skeletons';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -93,6 +93,7 @@ export default function DashboardPage(): React.JSX.Element {
   const isTeacher = user?.role === 'teacher';
 
   React.useEffect(() => {
+    if (!user) return;
     async function loadData() {
       try {
         if (isTeacher) {
@@ -109,14 +110,10 @@ export default function DashboardPage(): React.JSX.Element {
       }
     }
     loadData();
-  }, [isTeacher]);
+  }, [user, isTeacher]);
 
   if (loading) {
-    return (
-      <Container maxWidth="xl">
-        <Typography>Carregando...</Typography>
-      </Container>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (isTeacher && teacherData) {

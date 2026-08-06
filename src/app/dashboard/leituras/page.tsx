@@ -26,6 +26,7 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { GridCardsSkeleton } from '@/components/dashboard/skeletons';
 import Grid from '@mui/material/Unstable_Grid2';
 import { ChatCircle, PencilSimple as PencilIcon, Plus as PlusIcon, Trash as TrashIcon } from '@phosphor-icons/react';
 import { Controller, useForm } from 'react-hook-form';
@@ -51,7 +52,7 @@ type Values = zod.infer<typeof schema>;
 
 export default function LeiturasPage(): React.JSX.Element {
   const { user } = useUser();
-  const { showError } = useToast();
+  const { showError, showSuccess } = useToast();
   const [leituras, setLeituras] = React.useState<ContentData[]>([]);
   const [classes, setClasses] = React.useState<ClassData[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -62,7 +63,14 @@ export default function LeiturasPage(): React.JSX.Element {
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [isCommenting, setIsCommenting] = React.useState(false);
   const [selectedLeitura, setSelectedLeitura] = React.useState<ContentData | null>(null);
+  const leiturasRef = React.useRef(leituras);
+  leiturasRef.current = leituras;
   const [commentText, setCommentText] = React.useState('');
+  const [editingCommentId, setEditingCommentId] = React.useState<number | null>(null);
+  const [editingCommentText, setEditingCommentText] = React.useState('');
+  const [isEditingComment, setIsEditingComment] = React.useState(false);
+  const [deletingCommentId, setDeletingCommentId] = React.useState<number | null>(null);
+  const [isDeletingComment, setIsDeletingComment] = React.useState(false);
 
   const isTeacher = user?.role === 'teacher';
   const isStudent = user?.role === 'student';
@@ -78,38 +86,40 @@ export default function LeiturasPage(): React.JSX.Element {
     resolver: zodResolver(schema),
   });
 
-  React.useEffect(() => {
-    async function load() {
-      try {
-        const [leiturasData, classesData] = await Promise.all([
-          api.get<ContentData[]>(endpoints.content.byType('leitura')),
-          isTeacher
-            ? api.get<ClassData[]>(endpoints.dashboard.teacherClasses)
-            : api.get<ClassData[]>(endpoints.dashboard.studentClasses),
-        ]);
-        setLeituras(leiturasData);
-        setClasses(classesData);
-      } catch (err) {
-        showError('Erro ao carregar leituras');
-      } finally {
-        setLoading(false);
-      }
+  async function load() {
+    try {
+      const [leiturasData, classesData] = await Promise.all([
+        api.get<ContentData[]>(endpoints.content.byType('leitura')),
+        isTeacher
+          ? api.get<ClassData[]>(endpoints.dashboard.teacherClasses)
+          : api.get<ClassData[]>(endpoints.dashboard.studentClasses),
+      ]);
+      setLeituras(leiturasData);
+      setClasses(classesData);
+    } catch (err) {
+      showError('Erro ao carregar leituras');
+    } finally {
+      setLoading(false);
     }
+  }
+
+  React.useEffect(() => {
+    if (!user) return;
     load();
-  }, [isTeacher]);
+  }, [user, isTeacher]);
 
   const onSubmit = async (values: Values) => {
     setIsPending(true);
     try {
       if (editingId) {
-        const updated = await api.put<ContentData>(endpoints.content.byId(editingId), values);
-        setLeituras((prev) => prev.map((l) => (l.id === editingId ? updated : l)));
+        await api.put<ContentData>(endpoints.content.byId(editingId), values);
       } else {
-        const newLeitura = await api.post<ContentData>(endpoints.content.base, { ...values, type: 'leitura' });
-        setLeituras((prev) => [newLeitura, ...prev]);
+        await api.post<ContentData>(endpoints.content.base, { ...values, type: 'leitura' });
       }
+      await load();
       reset();
       setShowForm(false);
+      showSuccess(editingId ? 'Leitura editada com sucesso!' : 'Leitura criada com sucesso!');
       setEditingId(null);
     } catch (err) {
       showError(editingId ? 'Erro ao editar leitura' : 'Erro ao criar leitura');
@@ -133,7 +143,8 @@ export default function LeiturasPage(): React.JSX.Element {
     setIsDeleting(true);
     try {
       await api.delete(endpoints.content.byId(deleteId));
-      setLeituras((prev) => prev.filter((l) => l.id !== deleteId));
+      await load();
+      showSuccess('Leitura excluída com sucesso!');
       setDeleteId(null);
     } catch (err) {
       showError('Erro ao excluir leitura');
@@ -149,12 +160,87 @@ export default function LeiturasPage(): React.JSX.Element {
       const newComment = await api.post<CommentData>(endpoints.content.comment(selectedLeitura.id), {
         message: commentText.trim(),
       });
-      setSelectedLeitura((prev) => (prev ? { ...prev, Comment: [newComment, ...(prev.Comment || [])] } : prev));
+      setSelectedLeitura((prev) =>
+        prev ? { ...prev, Comment: [newComment, ...(prev.Comment || [])] } : prev
+      );
+      setLeituras((prev) =>
+        prev.map((l) =>
+          l.id === selectedLeitura.id
+            ? { ...l, Comment: [newComment, ...(l.Comment || [])] }
+            : l
+        )
+      );
+      showSuccess('Comentário adicionado com sucesso!');
       setCommentText('');
     } catch (err) {
       showError('Erro ao adicionar comentário');
     } finally {
       setIsCommenting(false);
+    }
+  };
+
+  const handleEditComment = async (commentId: number) => {
+    if (!editingCommentText.trim() || !selectedLeitura) return;
+    setIsEditingComment(true);
+    try {
+      const updatedComment = await api.put<CommentData>(endpoints.content.commentUpdate(commentId), {
+        message: editingCommentText.trim(),
+      });
+      setSelectedLeitura((prev) =>
+        prev
+          ? {
+              ...prev,
+              Comment: (prev.Comment || []).map((c) =>
+                c.id === commentId ? { ...c, message: updatedComment.message, updated_at: updatedComment.updated_at } : c
+              ),
+            }
+          : prev
+      );
+      setLeituras((prev) =>
+        prev.map((l) =>
+          l.id === selectedLeitura.id
+            ? {
+                ...l,
+                Comment: (l.Comment || []).map((c) =>
+                  c.id === commentId ? { ...c, message: updatedComment.message, updated_at: updatedComment.updated_at } : c
+                ),
+              }
+            : l
+        )
+      );
+      showSuccess('Comentário atualizado com sucesso!');
+      setEditingCommentId(null);
+      setEditingCommentText('');
+    } catch (err) {
+      showError('Erro ao editar comentário');
+    } finally {
+      setIsEditingComment(false);
+    }
+  };
+
+  const handleDeleteComment = async () => {
+    if (!deletingCommentId || !selectedLeitura) return;
+    setIsDeletingComment(true);
+    try {
+      await api.delete(endpoints.content.commentDelete(deletingCommentId));
+      setSelectedLeitura((prev) =>
+        prev
+          ? { ...prev, Comment: (prev.Comment || []).filter((c) => c.id !== deletingCommentId) }
+          : prev
+      );
+      setLeituras((prev) =>
+        prev.map((l) =>
+          l.id === selectedLeitura.id
+            ? { ...l, Comment: (l.Comment || []).filter((c) => c.id !== deletingCommentId) }
+            : l
+        )
+      );
+      showSuccess('Comentário excluído com sucesso!');
+      setDeletingCommentId(null);
+    } catch (err) {
+      showError('Erro ao excluir comentário');
+    } finally {
+      setIsDeletingComment(false);
     }
   };
 
@@ -165,7 +251,7 @@ export default function LeiturasPage(): React.JSX.Element {
   };
 
   if (loading) {
-    return <Typography>Carregando...</Typography>;
+    return <GridCardsSkeleton />;
   }
 
   return (
@@ -250,21 +336,21 @@ export default function LeiturasPage(): React.JSX.Element {
         <Grid container spacing={3}>
           {leituras.map((leitura) => (
             <Grid key={leitura.id} xs={12} md={6} lg={4}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', cursor: 'pointer' }} onClick={() => setSelectedLeitura(leitura)}>
                 <CardContent sx={{ flex: '1 1 auto' }}>
                   <Stack spacing={1}>
                     <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
                       <Typography variant="h6">{leitura.title}</Typography>
                       <Stack direction="row" spacing={0.5}>
-                        <IconButton size="small" onClick={() => setSelectedLeitura(leitura)}>
+                        <IconButton size="small" onClick={(e) => { e.stopPropagation(); setSelectedLeitura(leitura); }}>
                           <ChatCircle size={18} />
                         </IconButton>
                         {isTeacher && (
                           <>
-                            <IconButton color="warning" size="small" onClick={() => handleEdit(leitura)}>
+                            <IconButton color="warning" size="small" onClick={(e) => { e.stopPropagation(); handleEdit(leitura); }}>
                               <PencilIcon size={18} />
                             </IconButton>
-                            <IconButton color="error" size="small" onClick={() => setDeleteId(leitura.id)}>
+                            <IconButton color="error" size="small" onClick={(e) => { e.stopPropagation(); setDeleteId(leitura.id); }}>
                               <TrashIcon size={18} />
                             </IconButton>
                           </>
@@ -276,19 +362,7 @@ export default function LeiturasPage(): React.JSX.Element {
                         {leitura.subTitle}
                       </Typography>
                     )}
-                    <Chip label={leitura.class.name} size="small" color="primary" variant="outlined" />
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                      }}
-                    >
-                      {leitura.message.replace(/<[^>]*>/g, '')}
-                    </Typography>
+                    <Chip label={leitura.class.name} size="small" color="primary" variant="outlined" sx={{ fontSize: '0.7rem', height: 24, width: 'fit-content' }} />
                     <Typography variant="caption" color="text.secondary">
                       {leitura.Comment?.length || 0} comentário(s)
                     </Typography>
@@ -301,15 +375,15 @@ export default function LeiturasPage(): React.JSX.Element {
       )}
 
       <Dialog open={deleteId !== null} onClose={() => setDeleteId(null)}>
-        <DialogTitle>Confirmar exclusão</DialogTitle>
+        <DialogTitle sx={{ px: 3, py: 2 }}>Confirmar exclusão</DialogTitle>
         <DialogContent>
           <Typography>Tem certeza que deseja excluir esta leitura?</Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteId(null)} disabled={isDeleting}>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button variant="outlined" onClick={() => setDeleteId(null)} disabled={isDeleting} sx={{ px: 4 }}>
             Cancelar
           </Button>
-          <LoadingButton color="error" onClick={handleDelete} loading={isDeleting}>
+          <LoadingButton variant="contained" color="error" onClick={handleDelete} loading={isDeleting} sx={{ px: 4 }}>
             Excluir
           </LoadingButton>
         </DialogActions>
@@ -318,7 +392,7 @@ export default function LeiturasPage(): React.JSX.Element {
       <Dialog open={selectedLeitura !== null} onClose={() => setSelectedLeitura(null)} maxWidth="lg" fullWidth>
         {selectedLeitura && (
           <>
-            <DialogTitle>{selectedLeitura.title}</DialogTitle>
+            <DialogTitle sx={{ px: 3, py: 2 }}>{selectedLeitura.title}</DialogTitle>
             <DialogContent>
               <HtmlContent html={selectedLeitura.message} />
               <Divider sx={{ my: 2 }} />
@@ -326,44 +400,105 @@ export default function LeiturasPage(): React.JSX.Element {
                 Comentários
               </Typography>
               {isStudent && (
-                <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-                  <OutlinedInput
+                <Stack spacing={1} sx={{ mb: 2 }}>
+                  <TextField
                     fullWidth
                     size="small"
+                    multiline
+                    rows={4}
                     placeholder="Escreva um comentário..."
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleAddComment();
-                      }
-                    }}
                   />
-                  <LoadingButton variant="contained" onClick={handleAddComment} disabled={!commentText.trim()} loading={isCommenting}>
-                    Enviar
-                  </LoadingButton>
+                  <Stack direction="row" justifyContent="flex-end">
+                    <LoadingButton variant="contained" onClick={handleAddComment} disabled={!commentText.trim()} loading={isCommenting} sx={{ px: 4 }}>
+                      Enviar
+                    </LoadingButton>
+                  </Stack>
                 </Stack>
               )}
               <List>
-                {(selectedLeitura.Comment || []).map((comment) => (
-                  <ListItem key={comment.id} alignItems="flex-start">
-                    <ListItemText
-                      primary={comment.student.person.name}
-                      secondary={
-                        <>
-                          <Typography component="span" variant="body2">
-                            {comment.message}
-                          </Typography>
-                          <br />
-                          <Typography component="span" variant="caption" color="text.secondary">
-                            {new Date(comment.created_at).toLocaleDateString('pt-BR')}
-                          </Typography>
-                        </>
+                {(selectedLeitura.Comment || []).map((comment) => {
+                  const isOwner = user && comment.student.person.id === Number(user.id);
+                  return (
+                    <ListItem
+                      key={comment.id}
+                      alignItems="flex-start"
+                      secondaryAction={
+                        isStudent && isOwner && editingCommentId !== comment.id ? (
+                          <Stack direction="row" spacing={0.5}>
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                setEditingCommentId(comment.id);
+                                setEditingCommentText(comment.message);
+                              }}
+                            >
+                              <PencilIcon fontSize={14} />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => setDeletingCommentId(comment.id)}
+                            >
+                              <TrashIcon fontSize={14} />
+                            </IconButton>
+                          </Stack>
+                        ) : undefined
                       }
-                    />
-                  </ListItem>
-                ))}
+                    >
+                      {editingCommentId === comment.id ? (
+                        <Stack spacing={1} sx={{ width: '100%' }}>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            multiline
+                            rows={2}
+                            value={editingCommentText}
+                            onChange={(e) => setEditingCommentText(e.target.value)}
+                          />
+                          <Stack direction="row" spacing={1} justifyContent="flex-end">
+                            <Button
+                              size="small"
+                              onClick={() => {
+                                setEditingCommentId(null);
+                                setEditingCommentText('');
+                              }}
+                              disabled={isEditingComment}
+                            >
+                              Cancelar
+                            </Button>
+                            <LoadingButton
+                              size="small"
+                              variant="contained"
+                              onClick={() => handleEditComment(comment.id)}
+                              disabled={!editingCommentText.trim()}
+                              loading={isEditingComment}
+                            >
+                              Salvar
+                            </LoadingButton>
+                          </Stack>
+                        </Stack>
+                      ) : (
+                        <ListItemText
+                          primary={comment.student.person.name}
+                          secondary={
+                            <>
+                              <Typography component="span" variant="body2">
+                                {comment.message}
+                              </Typography>
+                              <br />
+                              <Typography component="span" variant="caption" color="text.secondary">
+                                {new Date(comment.created_at).toLocaleString('pt-BR')}
+                                {comment.updated_at && ' (editado)'}
+                              </Typography>
+                            </>
+                          }
+                        />
+                      )}
+                    </ListItem>
+                  );
+                })}
                 {(!selectedLeitura.Comment || selectedLeitura.Comment.length === 0) && (
                   <Typography color="text.secondary" variant="body2" sx={{ p: 2 }}>
                     Nenhum comentário ainda.
@@ -371,11 +506,26 @@ export default function LeiturasPage(): React.JSX.Element {
                 )}
               </List>
             </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setSelectedLeitura(null)}>Fechar</Button>
+            <DialogActions sx={{ px: 3, py: 2 }}>
+              <Button variant="outlined" onClick={() => setSelectedLeitura(null)} sx={{ px: 4 }}>Fechar</Button>
             </DialogActions>
           </>
         )}
+      </Dialog>
+
+      <Dialog open={deletingCommentId !== null} onClose={() => setDeletingCommentId(null)}>
+        <DialogTitle sx={{ px: 3, py: 2 }}>Excluir comentário</DialogTitle>
+        <DialogContent>
+          <Typography>Tem certeza que deseja excluir este comentário?</Typography>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button variant="outlined" onClick={() => setDeletingCommentId(null)} disabled={isDeletingComment} sx={{ px: 4 }}>
+            Cancelar
+          </Button>
+          <LoadingButton variant="contained" color="error" onClick={handleDeleteComment} loading={isDeletingComment} sx={{ px: 4 }}>
+            Excluir
+          </LoadingButton>
+        </DialogActions>
       </Dialog>
     </Stack>
   );

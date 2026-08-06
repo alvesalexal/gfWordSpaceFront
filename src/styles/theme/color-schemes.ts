@@ -75,13 +75,13 @@ export const colorSchemes = {
     palette: {
       action: { disabledBackground: 'rgba(0, 0, 0, 0.06)' },
       background: {
-        default: 'var(--mui-palette-common-white)',
-        defaultChannel: '255 255 255',
+        default: 'var(--mui-palette-neutral-50)',
+        defaultChannel: '249 250 251',
         paper: 'var(--mui-palette-common-white)',
         paperChannel: '255 255 255',
-        level1: 'var(--mui-palette-neutral-50)',
-        level2: 'var(--mui-palette-neutral-100)',
-        level3: 'var(--mui-palette-neutral-200)',
+        level1: 'var(--mui-palette-neutral-100)',
+        level2: 'var(--mui-palette-neutral-200)',
+        level3: 'var(--mui-palette-neutral-300)',
       },
       common: { black: '#000000', white: '#ffffff' },
       divider: 'var(--mui-palette-neutral-200)',

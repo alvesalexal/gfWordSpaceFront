@@ -36,13 +36,13 @@ export function FormDialog({
 }: FormDialogProps): React.JSX.Element {
   return (
     <Dialog open={open} onClose={onClose} maxWidth={maxWidth} fullWidth={fullWidth}>
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle sx={{ px: 3, py: 2 }}>{title}</DialogTitle>
       <DialogContent>
         <form id="form-dialog" onSubmit={onSubmit}>
           {children}
         </form>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ px: 3, py: 2 }}>
         <Button variant="outlined" onClick={onClose} disabled={isPending}>
           {cancelLabel}
         </Button>

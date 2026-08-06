@@ -7,6 +7,6 @@ export interface Config {
 }
 
 export const config: Config = {
-  site: { name: 'WordSpace', description: 'Estudos Biblicos', themeColor: '#0a0f1a', url: getSiteURL() },
+  site: { name: 'WordSpace', description: 'Estudos Bíblicos', themeColor: '#0a0f1a', url: getSiteURL() },
   logLevel: (process.env.NEXT_PUBLIC_LOG_LEVEL as keyof typeof LogLevel) ?? LogLevel.ALL,
 };

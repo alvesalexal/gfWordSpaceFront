@@ -162,6 +162,7 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
           position: 'relative',
           textDecoration: 'none',
           whiteSpace: 'nowrap',
+          transition: 'background-color 0.15s ease, color 0.15s ease',
           '&:hover': { bgcolor: active ? undefined : 'var(--NavItem-hover-bg)' },
           ...(disabled && {
             color: 'var(--NavItem-disabled-color)',
@@ -170,6 +171,16 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
           ...(active && {
             bgcolor: 'var(--NavItem-active-background)',
             color: 'var(--NavItem-active-color)',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              left: 0,
+              top: '25%',
+              bottom: '25%',
+              width: 3,
+              borderRadius: 2,
+              bgcolor: 'var(--NavItem-active-color)',
+            },
           }),
         }}
       >

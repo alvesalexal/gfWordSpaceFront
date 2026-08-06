@@ -14,11 +14,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import { GridCardsSkeleton } from '@/components/dashboard/skeletons';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Pencil as PencilIcon, Plus as PlusIcon, Trash as TrashIcon } from '@phosphor-icons/react';
 import { Controller, useForm } from 'react-hook-form';
@@ -89,8 +90,9 @@ export default function TurmasPage(): React.JSX.Element {
         setLoading(false);
       }
     }
+    if (!user) return;
     load();
-  }, [isTeacher]);
+  }, [user, isTeacher]);
 
   const onSubmit = async (values: Values) => {
     setIsPending(true);
@@ -154,7 +156,7 @@ export default function TurmasPage(): React.JSX.Element {
   };
 
   if (loading) {
-    return <Typography>Carregando...</Typography>;
+    return <GridCardsSkeleton />;
   }
 
   return (
@@ -317,11 +319,11 @@ export default function TurmasPage(): React.JSX.Element {
       </Box>
 
       <Dialog open={deleteId !== null} onClose={() => setDeleteId(null)}>
-        <DialogTitle>Confirmar exclusão</DialogTitle>
+        <DialogTitle sx={{ px: 3, py: 2 }}>Confirmar exclusão</DialogTitle>
         <DialogContent>
           <Typography>Tem certeza que deseja excluir esta turma?</Typography>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ px: 3, py: 2 }}>
           <Button onClick={() => setDeleteId(null)} disabled={isDeleting}>
             Cancelar
           </Button>

@@ -26,11 +26,12 @@ export default function Editor({
         imagesExtensions: ['jpg', 'png', 'jpeg', 'gif'],
       },
     }),
-    []
+    [theme.palette.mode]
   );
 
   return (
     <JoditEditor
+      key={theme.palette.mode}
       ref={editor}
       value={content}
       config={config}
