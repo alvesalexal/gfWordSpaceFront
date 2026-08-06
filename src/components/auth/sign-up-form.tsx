@@ -17,6 +17,10 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import InputAdornment from '@mui/material/InputAdornment';
+import { CheckCircle } from '@phosphor-icons/react/dist/ssr/CheckCircle';
+import { XCircle } from '@phosphor-icons/react/dist/ssr/XCircle';
 import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
@@ -27,7 +31,10 @@ import { MaskedTextField } from '@/components/core/masked-text-field';
 
 const schema = zod.object({
   name: zod.string().min(1, { message: 'Nome é obrigatório' }).regex(/^[a-zA-ZÀ-ÿ\s]*$/, 'Nome deve conter apenas letras e espaços'),
-  username: zod.string().min(3, { message: 'Username deve ter pelo menos 3 caracteres' }).regex(/^[a-zA-Z0-9_]+$/, 'Username deve conter apenas letras, números e underscores'),
+  username: zod.string()
+    .min(3, { message: 'Mínimo 3 caracteres' })
+    .max(20, { message: 'Máximo 20 caracteres' })
+    .regex(/^[a-zA-Z0-9_.]+$/, 'Apenas letras, números, _ e .'),
   email: zod.string().min(1, { message: 'Email é obrigatório' }).email('Email inválido'),
   password: zod.string().min(6, { message: 'Senha deve ter pelo menos 6 caracteres' }),
   role: zod.string().min(1, { message: 'Perfil é obrigatório' }),
@@ -45,6 +52,27 @@ export function SignUpForm(): React.JSX.Element {
   const { checkSession } = useUser();
 
   const [isPending, setIsPending] = React.useState<boolean>(false);
+  const [usernameStatus, setUsernameStatus] = React.useState<'idle' | 'checking' | 'available' | 'unavailable'>('idle');
+
+  const handleUsernameBlur = React.useCallback(
+    async (value: string) => {
+      if (value.length < 3) {
+        setUsernameStatus('idle');
+        return;
+      }
+
+      setUsernameStatus('checking');
+
+      const { data } = await authClient.checkUsername(value);
+
+      if (data) {
+        setUsernameStatus(data.available ? 'available' : 'unavailable');
+      } else {
+        setUsernameStatus('idle');
+      }
+    },
+    []
+  );
 
   const {
     control,
@@ -106,10 +134,47 @@ export function SignUpForm(): React.JSX.Element {
             control={control}
             name="username"
             render={({ field }) => (
-              <FormControl error={Boolean(errors.username)}>
+              <FormControl error={Boolean(errors.username)} fullWidth>
                 <InputLabel>Username</InputLabel>
-                <OutlinedInput {...field} label="Username" />
-                {errors.username ? <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText> : null}
+                <OutlinedInput
+                  {...field}
+                  label="Username"
+                  onBlur={(e) => {
+                    field.onBlur();
+                    handleUsernameBlur(e.target.value);
+                  }}
+                  endAdornment={
+                    usernameStatus === 'checking' ? (
+                      <InputAdornment position="end">
+                        <CircularProgress size={20} />
+                      </InputAdornment>
+                    ) : usernameStatus === 'available' ? (
+                      <InputAdornment position="end">
+                        <CheckCircle size={22} weight="fill" style={{ color: 'var(--mui-palette-success-main)' }} />
+                      </InputAdornment>
+                    ) : usernameStatus === 'unavailable' ? (
+                      <InputAdornment position="end">
+                        <XCircle size={22} weight="fill" style={{ color: 'var(--mui-palette-error-main)' }} />
+                      </InputAdornment>
+                    ) : null
+                  }
+                  sx={{
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: usernameStatus === 'available'
+                        ? 'success.main'
+                        : usernameStatus === 'unavailable'
+                        ? 'error.main'
+                        : undefined,
+                    },
+                  }}
+                />
+                {errors.username ? (
+                  <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>
+                ) : usernameStatus === 'unavailable' ? (
+                  <FormHelperText sx={{ color: 'error.main' }}>Username já cadastrado</FormHelperText>
+                ) : usernameStatus === 'available' ? (
+                  <FormHelperText sx={{ color: 'success.main' }}>Username disponível</FormHelperText>
+                ) : null}
               </FormControl>
             )}
           />
