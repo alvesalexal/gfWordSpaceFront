@@ -27,6 +27,7 @@ import { MaskedTextField } from '@/components/core/masked-text-field';
 
 const schema = zod.object({
   name: zod.string().min(1, { message: 'Nome é obrigatório' }).regex(/^[a-zA-ZÀ-ÿ\s]*$/, 'Nome deve conter apenas letras e espaços'),
+  username: zod.string().min(3, { message: 'Username deve ter pelo menos 3 caracteres' }).regex(/^[a-zA-Z0-9_]+$/, 'Username deve conter apenas letras, números e underscores'),
   email: zod.string().min(1, { message: 'Email é obrigatório' }).email('Email inválido'),
   password: zod.string().min(6, { message: 'Senha deve ter pelo menos 6 caracteres' }),
   role: zod.string().min(1, { message: 'Perfil é obrigatório' }),
@@ -36,7 +37,7 @@ const schema = zod.object({
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { name: '', email: '', password: '', role: 'student', phone: '', terms: false } satisfies Values;
+const defaultValues = { name: '', username: '', email: '', password: '', role: 'student', phone: '', terms: false } satisfies Values;
 
 export function SignUpForm(): React.JSX.Element {
   const router = useRouter();
@@ -58,6 +59,7 @@ export function SignUpForm(): React.JSX.Element {
 
       const { error } = await authClient.signUp({
         name: values.name,
+        username: values.username,
         email: values.email,
         password: values.password,
         role: values.role,
@@ -97,6 +99,17 @@ export function SignUpForm(): React.JSX.Element {
                 <InputLabel>Nome completo</InputLabel>
                 <OutlinedInput {...field} label="Nome completo" />
                 {errors.name ? <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText> : null}
+              </FormControl>
+            )}
+          />
+          <Controller
+            control={control}
+            name="username"
+            render={({ field }) => (
+              <FormControl error={Boolean(errors.username)}>
+                <InputLabel>Username</InputLabel>
+                <OutlinedInput {...field} label="Username" />
+                {errors.username ? <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText> : null}
               </FormControl>
             )}
           />

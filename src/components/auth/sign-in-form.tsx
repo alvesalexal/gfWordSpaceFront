@@ -28,13 +28,13 @@ import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
 
 const schema = zod.object({
-  email: zod.string().min(1, { message: 'Email obrigatorio' }).email('Email invalido'),
+  login: zod.string().min(1, { message: 'Email ou username obrigatório' }),
   password: zod.string().min(1, { message: 'Senha obrigatoria' }),
 });
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { email: '', password: '' } satisfies Values;
+const defaultValues = { login: '', password: '' } satisfies Values;
 
 
 
@@ -101,9 +101,9 @@ export function SignInForm(): React.JSX.Element {
         <Stack spacing={2.5}>
           <Controller
             control={control}
-            name="email"
+            name="login"
             render={({ field }) => (
-              <FormControl error={Boolean(errors.email)} fullWidth>
+              <FormControl error={Boolean(errors.login)} fullWidth>
                 <InputLabel
                   sx={{
                     '&.Mui-focused': {
@@ -111,12 +111,11 @@ export function SignInForm(): React.JSX.Element {
                     },
                   }}
                 >
-                  Email
+                  Email ou Username
                 </InputLabel>
                 <OutlinedInput
                   {...field}
-                  label="Email"
-                  type="email"
+                  label="Email ou Username"
                   startAdornment={
                     <InputAdornment position="start">
                       <Envelope
@@ -147,7 +146,7 @@ export function SignInForm(): React.JSX.Element {
                     },
                   }}
                 />
-                {errors.email ? <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText> : null}
+                {errors.login ? <FormHelperText sx={{ color: 'error.main' }}>{errors.login.message}</FormHelperText> : null}
               </FormControl>
             )}
           />

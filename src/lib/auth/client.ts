@@ -5,6 +5,7 @@ import { api, endpoints, type AuthResponse } from '@/lib/api';
 
 export interface SignUpParams {
   name: string;
+  username: string;
   email: string;
   password: string;
   role: string;
@@ -12,7 +13,7 @@ export interface SignUpParams {
 }
 
 export interface SignInWithPasswordParams {
-  email: string;
+  login: string;
   password: string;
 }
 
@@ -48,25 +49,47 @@ class AuthClient {
       const userData = await api.get<{
         id: number;
         name: string;
+        username: string | null;
         email: string;
         role: string;
         url_avatar?: string;
         phone?: string;
+        needsUsername: boolean;
       }>(endpoints.auth.me);
 
       return {
         data: {
           id: String(userData.id),
           name: userData.name,
+          username: userData.username || '',
           email: userData.email,
           avatar: userData.url_avatar || '/assets/avatar.png',
           role: userData.role,
           phone: userData.phone || '',
+          needsUsername: userData.needsUsername,
         },
       };
     } catch {
       localStorage.removeItem('custom-auth-token');
       return { data: null };
+    }
+  }
+
+  async checkUsername(username: string): Promise<{ error?: string; data?: { available: boolean } }> {
+    try {
+      const result = await api.get<{ available: boolean }>(`/auth/check-username/${username}`);
+      return { data: result };
+    } catch (error: any) {
+      return { error: error.message || 'Erro ao verificar username' };
+    }
+  }
+
+  async setUsername(username: string): Promise<{ error?: string; data?: { message: string } }> {
+    try {
+      const result = await api.put<{ message: string }>('/auth/set-username', { username });
+      return { data: result };
+    } catch (error: any) {
+      return { error: error.message || 'Erro ao definir username' };
     }
   }
 
