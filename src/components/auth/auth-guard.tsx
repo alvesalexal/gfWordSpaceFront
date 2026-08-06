@@ -7,6 +7,7 @@ import Alert from '@mui/material/Alert';
 import { paths } from '@/paths';
 import { logger } from '@/lib/default-logger';
 import { useUser } from '@/hooks/use-user';
+import { SetUsernameModal } from './set-username-modal';
 
 export interface AuthGuardProps {
   children: React.ReactNode;
@@ -49,6 +50,10 @@ export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element | nul
 
   if (error) {
     return <Alert color="error">{error}</Alert>;
+  }
+
+  if (user?.needsUsername) {
+    return <SetUsernameModal open={true} onClose={() => {}} />;
   }
 
   return <React.Fragment>{children}</React.Fragment>;

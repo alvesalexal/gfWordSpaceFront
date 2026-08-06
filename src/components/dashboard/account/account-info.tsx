@@ -104,6 +104,11 @@ export function AccountInfo(): React.JSX.Element {
           </Badge>
           <Stack spacing={1} sx={{ textAlign: 'center' }}>
             <Typography variant="h5">{user?.name || 'Usuário'}</Typography>
+            {user?.username && (
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+                @{user.username}
+              </Typography>
+            )}
             <Typography color="text.secondary" variant="body2">
               {user?.email || ''}
             </Typography>

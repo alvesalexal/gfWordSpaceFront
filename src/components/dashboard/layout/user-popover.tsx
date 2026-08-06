@@ -59,6 +59,11 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
     >
       <Box sx={{ p: '16px 20px ' }}>
         <Typography variant="subtitle1">{user?.name || 'Usuário'}</Typography>
+        {user?.username && (
+          <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+            @{user.username}
+          </Typography>
+        )}
         <Typography color="text.secondary" variant="body2">
           {user?.email || ''}
         </Typography>
