@@ -508,7 +508,7 @@ export default function LeiturasPage(): React.JSX.Element {
                               </Typography>
                               <br />
                               <Typography component="span" variant="caption" color="text.secondary">
-                                {new Date(comment.created_at).toLocaleString('pt-BR')}
+                                {new Date(comment.created_at).toLocaleString('pt-BR', { timeZone: 'UTC' })}
                                 {comment.updated_at && ' (editado)'}
                               </Typography>
                             </>
